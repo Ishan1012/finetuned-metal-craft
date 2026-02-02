@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Lightbox, GalleryImage } from "@/components/gallery/Lightbox";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
 import { cn } from "@/lib/utils";
 
 // Import gallery images
@@ -166,16 +167,22 @@ export default function Gallery() {
         <div className="absolute top-1/4 right-0 w-96 h-96 bg-[hsl(38_70%_50%_/_0.1)] rounded-full blur-3xl" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
-            <p className="text-sm font-semibold text-[hsl(38_70%_50%)] uppercase tracking-wider mb-4">
-              Our Work
-            </p>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[hsl(40_20%_98%)] mb-6">
-              Project Gallery
-            </h1>
-            <p className="text-xl text-[hsl(40_20%_98%_/_0.8)]">
-              Explore our completed projects across India. Each piece showcases 
-              our commitment to precision and premium finishing.
-            </p>
+            <ScrollReveal animation="fade-up">
+              <p className="text-sm font-semibold text-[hsl(38_70%_50%)] uppercase tracking-wider mb-4">
+                Our Work
+              </p>
+            </ScrollReveal>
+            <ScrollReveal animation="fade-up" delay={0.1}>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[hsl(40_20%_98%)] mb-6">
+                Project Gallery
+              </h1>
+            </ScrollReveal>
+            <ScrollReveal animation="fade-up" delay={0.2}>
+              <p className="text-xl text-[hsl(40_20%_98%_/_0.8)]">
+                Explore our completed projects across India. Each piece showcases 
+                our commitment to precision and premium finishing.
+              </p>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -207,22 +214,28 @@ export default function Gallery() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {filteredProjects.length > 0 ? (
             <>
-              <p className="text-center text-muted-foreground mb-8">
-                Showing {filteredProjects.length} project{filteredProjects.length !== 1 ? "s" : ""}
-                {selectedCategory !== "All" && ` in ${selectedCategory}`}
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <ScrollReveal animation="fade">
+                <p className="text-center text-muted-foreground mb-8">
+                  Showing {filteredProjects.length} project{filteredProjects.length !== 1 ? "s" : ""}
+                  {selectedCategory !== "All" && ` in ${selectedCategory}`}
+                </p>
+              </ScrollReveal>
+              <StaggerContainer 
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                staggerDelay={0.08}
+              >
                 {filteredProjects.map((project, index) => (
-                  <GalleryImage
-                    key={project.id}
-                    src={project.src}
-                    alt={project.alt}
-                    title={project.title}
-                    category={`${project.category} • ${project.location}`}
-                    onClick={() => openLightbox(index)}
-                  />
+                  <StaggerItem key={project.id}>
+                    <GalleryImage
+                      src={project.src}
+                      alt={project.alt}
+                      title={project.title}
+                      category={`${project.category} • ${project.location}`}
+                      onClick={() => openLightbox(index)}
+                    />
+                  </StaggerItem>
                 ))}
-              </div>
+              </StaggerContainer>
             </>
           ) : (
             <div className="text-center py-16">
@@ -237,28 +250,28 @@ export default function Gallery() {
       {/* Stats Section */}
       <section className="py-16 bg-[hsl(40_30%_95%)]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
               { value: "500+", label: "Projects Completed" },
               { value: "50+", label: "Cities Served" },
               { value: "98%", label: "Satisfaction Rate" },
               { value: "15+", label: "Years Experience" },
             ].map((stat) => (
-              <div key={stat.label}>
+              <StaggerItem key={stat.label}>
                 <p className="text-3xl sm:text-4xl font-bold text-[hsl(38_70%_50%)]">
                   {stat.value}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="section-padding bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto">
+          <ScrollReveal animation="scale" className="text-center max-w-2xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
               Ready to Start Your Project?
             </h2>
@@ -282,7 +295,7 @@ export default function Gallery() {
                 WhatsApp Us
               </a>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
