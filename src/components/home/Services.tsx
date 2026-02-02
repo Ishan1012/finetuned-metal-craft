@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Fence, Building2, Award, DoorOpen, Scissors } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
 
 const services = [
   {
@@ -42,52 +42,56 @@ export function Services() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
-            What We Offer
-          </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Our Products & Services
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            From residential projects to commercial installations, we deliver premium 
-            metal fabrication solutions with unmatched finishing quality.
-          </p>
+          <ScrollReveal animation="fade-up">
+            <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
+              What We Offer
+            </p>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={0.1}>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+              Our Products & Services
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={0.2}>
+            <p className="text-lg text-muted-foreground">
+              From residential projects to commercial installations, we deliver premium 
+              metal fabrication solutions with unmatched finishing quality.
+            </p>
+          </ScrollReveal>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <Card
-              key={service.title}
-              className="group bg-card border-border hover-lift cursor-pointer overflow-hidden"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <CardContent className="p-8">
-                {/* Icon */}
-                <div className="h-14 w-14 rounded-xl gradient-gold flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <service.icon className="h-7 w-7 text-accent-foreground" />
-                </div>
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service) => (
+            <StaggerItem key={service.title}>
+              <Card className="group bg-card border-border hover-lift cursor-pointer overflow-hidden h-full">
+                <CardContent className="p-8">
+                  {/* Icon */}
+                  <div className="h-14 w-14 rounded-xl gradient-gold flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <service.icon className="h-7 w-7 text-accent-foreground" />
+                  </div>
 
-                {/* Content */}
-                <h3 className="text-xl font-bold text-foreground mb-3">
-                  {service.title}
-                </h3>
-                <p className="text-muted-foreground mb-6 leading-relaxed">
-                  {service.description}
-                </p>
+                  {/* Content */}
+                  <h3 className="text-xl font-bold text-foreground mb-3">
+                    {service.title}
+                  </h3>
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
+                    {service.description}
+                  </p>
 
-                {/* Link */}
-                <Link
-                  to={service.href}
-                  className="inline-flex items-center text-gold font-semibold hover:gap-3 gap-2 transition-all"
-                >
-                  Learn More
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </CardContent>
-            </Card>
+                  {/* Link */}
+                  <Link
+                    to={service.href}
+                    className="inline-flex items-center text-gold font-semibold hover:gap-3 gap-2 transition-all"
+                  >
+                    Learn More
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </CardContent>
+              </Card>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

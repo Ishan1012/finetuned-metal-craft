@@ -1,4 +1,5 @@
 import { PenTool, Crosshair, Sparkles, Package } from "lucide-react";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
 
 const steps = [
   {
@@ -33,51 +34,56 @@ export function Process() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
-            Our Process
-          </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground mb-6">
-            How We Work
-          </h2>
-          <p className="text-lg text-primary-foreground/80">
-            From concept to delivery, every step is crafted for perfection.
-          </p>
+          <ScrollReveal animation="fade-up">
+            <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
+              Our Process
+            </p>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={0.1}>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground mb-6">
+              How We Work
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={0.2}>
+            <p className="text-lg text-primary-foreground/80">
+              From concept to delivery, every step is crafted for perfection.
+            </p>
+          </ScrollReveal>
         </div>
 
         {/* Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" staggerDelay={0.15}>
           {steps.map((item, index) => (
-            <div
-              key={item.title}
-              className="relative"
-            >
-              {/* Connector line (hidden on mobile) */}
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-12 left-full w-full h-px bg-primary-foreground/20 -translate-x-1/2 z-0" />
-              )}
+            <StaggerItem key={item.title}>
+              <div className="relative h-full">
+                {/* Connector line (hidden on mobile) */}
+                {index < steps.length - 1 && (
+                  <div className="hidden lg:block absolute top-12 left-full w-full h-px bg-primary-foreground/20 -translate-x-1/2 z-0" />
+                )}
 
-              <div className="relative bg-primary-foreground/5 backdrop-blur-sm rounded-xl p-8 border border-primary-foreground/10 hover:border-gold/50 transition-colors">
-                {/* Step number */}
-                <span className="absolute -top-4 -right-4 h-10 w-10 rounded-full gradient-gold flex items-center justify-center text-sm font-bold text-accent-foreground">
-                  {item.step}
-                </span>
+                <div className="relative bg-primary-foreground/5 backdrop-blur-sm rounded-xl p-8 border border-primary-foreground/10 hover:border-gold/50 transition-colors h-full">
+                  {/* Step number */}
+                  <span className="absolute -top-4 -right-4 h-10 w-10 rounded-full gradient-gold flex items-center justify-center text-sm font-bold text-accent-foreground">
+                    {item.step}
+                  </span>
 
-                {/* Icon */}
-                <div className="h-14 w-14 rounded-xl bg-primary-foreground/10 flex items-center justify-center mb-6">
-                  <item.icon className="h-7 w-7 text-gold" />
+                  {/* Icon */}
+                  <div className="h-14 w-14 rounded-xl bg-primary-foreground/10 flex items-center justify-center mb-6">
+                    <item.icon className="h-7 w-7 text-gold" />
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="text-xl font-bold text-primary-foreground mb-3">
+                    {item.title}
+                  </h3>
+                  <p className="text-primary-foreground/70 leading-relaxed">
+                    {item.description}
+                  </p>
                 </div>
-
-                {/* Content */}
-                <h3 className="text-xl font-bold text-primary-foreground mb-3">
-                  {item.title}
-                </h3>
-                <p className="text-primary-foreground/70 leading-relaxed">
-                  {item.description}
-                </p>
               </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

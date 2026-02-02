@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Eye } from "lucide-react";
+import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-homepage.jpg";
 
 export function Hero() {
@@ -23,25 +24,45 @@ export function Hero() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/20 text-gold mb-8 animate-fade-in">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/20 text-gold mb-8"
+          >
             <span className="h-2 w-2 rounded-full bg-gold animate-pulse" />
             <span className="text-sm font-medium">Based in Satna, Madhya Pradesh</span>
-          </div>
+          </motion.div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight"
+          >
             Premium CNC Laser Cutting with{" "}
             <span className="text-gradient-gold">Finishing Others Skip</span>
-          </h1>
+          </motion.h1>
 
           {/* Subheadline */}
-          <p className="text-lg sm:text-xl text-primary-foreground/80 mb-10 max-w-2xl animate-fade-in" style={{ animationDelay: "0.2s" }}>
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-lg sm:text-xl text-primary-foreground/80 mb-10 max-w-2xl"
+          >
             Delivering Excellence in Metal Fabrication Across India. 
             Every edge smoothed, every piece perfection-tested.
-          </p>
+          </motion.p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4"
+          >
             <Button variant="hero" size="xl" asChild>
               <Link to="/contact">
                 Get Free Quote
@@ -54,22 +75,32 @@ export function Hero() {
                 View Our Work
               </Link>
             </Button>
-          </div>
+          </motion.div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mt-16 pt-12 border-t border-primary-foreground/10 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+            className="grid grid-cols-2 sm:grid-cols-4 gap-8 mt-16 pt-12 border-t border-primary-foreground/10"
+          >
             {[
               { value: "500+", label: "Happy Customers" },
               { value: "50+", label: "Cities Served" },
               { value: "15+", label: "Years Experience" },
               { value: "1 Year", label: "Warranty" },
-            ].map((stat) => (
-              <div key={stat.label}>
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+              >
                 <p className="text-3xl sm:text-4xl font-bold text-gold">{stat.value}</p>
                 <p className="text-sm text-primary-foreground/60 mt-1">{stat.label}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,4 +1,5 @@
 import { Sparkles, Truck, BadgeCheck, Users, MapPin, Shield } from "lucide-react";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
 
 const reasons = [
   {
@@ -39,44 +40,48 @@ export function WhyChooseUs() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
-            The Difference
-          </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Why Choose Agrawal & Son Daughter?
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            When quality matters, choose the manufacturer that doesn't take shortcuts.
-          </p>
+          <ScrollReveal animation="fade-up">
+            <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
+              The Difference
+            </p>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={0.1}>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+              Why Choose Agrawal & Son Daughter?
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={0.2}>
+            <p className="text-lg text-muted-foreground">
+              When quality matters, choose the manufacturer that doesn't take shortcuts.
+            </p>
+          </ScrollReveal>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-          {reasons.map((reason, index) => (
-            <div
-              key={reason.title}
-              className="flex gap-5"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {/* Icon */}
-              <div className="shrink-0">
-                <div className="h-12 w-12 rounded-lg bg-gold/10 flex items-center justify-center">
-                  <reason.icon className="h-6 w-6 text-gold" />
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+          {reasons.map((reason) => (
+            <StaggerItem key={reason.title}>
+              <div className="flex gap-5">
+                {/* Icon */}
+                <div className="shrink-0">
+                  <div className="h-12 w-12 rounded-lg bg-gold/10 flex items-center justify-center">
+                    <reason.icon className="h-6 w-6 text-gold" />
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div>
+                  <h3 className="text-lg font-bold text-foreground mb-2">
+                    {reason.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {reason.description}
+                  </p>
                 </div>
               </div>
-
-              {/* Content */}
-              <div>
-                <h3 className="text-lg font-bold text-foreground mb-2">
-                  {reason.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {reason.description}
-                </p>
-              </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );
