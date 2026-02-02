@@ -14,6 +14,7 @@ import {
   Clock,
   Sparkles
 } from "lucide-react";
+import heroRailings from "@/assets/hero-railings.jpg";
 
 const railingTypes = [
   {
@@ -85,8 +86,15 @@ export default function Railings() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative py-24 lg:py-32 gradient-hero overflow-hidden">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-[hsl(38_70%_50%_/_0.1)] rounded-full blur-3xl" />
+      <section className="relative py-24 lg:py-32 overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src={heroRailings}
+            alt="Elegant stainless steel staircase railing"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(240_15%_13%_/_0.95)] via-[hsl(240_15%_13%_/_0.85)] to-[hsl(240_15%_13%_/_0.5)]" />
+        </div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold text-[hsl(38_70%_50%)] uppercase tracking-wider mb-4">
