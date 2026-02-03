@@ -41,8 +41,8 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight"
           >
-            Premium CNC Laser Cutting with{" "}
-            <span className="text-gradient-gold">Finishing Others Skip</span>
+            Precision CNC Laser Cutting with{" "}
+            <span className="text-gradient-gold">Superior Finishing</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -52,8 +52,8 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-lg sm:text-xl text-primary-foreground/80 mb-10 max-w-2xl"
           >
-            Delivering Excellence in Metal Fabrication Across India. 
-            Every edge smoothed, every piece perfection-tested.
+            Creating architectural metal solutions for modern homes, offices, and 
+            commercial spaces across India. Every edge smoothed, every piece perfection-tested.
           </motion.p>
 
           {/* CTAs */}
@@ -65,12 +65,12 @@ export function Hero() {
           >
             <Button variant="hero" size="xl" asChild>
               <Link to="/contact">
-                Get Free Quote
+                Request a Quote
                 <ArrowRight className="h-5 w-5" />
               </Link>
             </Button>
             <Button variant="heroOutline" size="xl" asChild>
-              <Link to="/products/railings">
+              <Link to="/gallery">
                 <Eye className="h-5 w-5" />
                 View Our Work
               </Link>

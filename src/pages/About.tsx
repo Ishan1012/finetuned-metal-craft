@@ -10,47 +10,62 @@ import {
   Target, 
   Eye,
   Wrench,
-  Award,
   Clock,
   MapPin,
-  Heart
+  Heart,
+  Sparkles,
+  Truck,
+  Shield,
+  BadgeCheck,
+  Award
 } from "lucide-react";
 
 const values = [
   {
-    icon: Wrench,
-    title: "The Extra Step",
-    description: "While most manufacturers deliver rough-cut pieces, we go further. Our finishing process ensures every edge is smooth, every corner is perfect.",
+    icon: Sparkles,
+    title: "Quality First",
+    description: "We don't skip steps. Our finishing process is non-negotiable, ensuring smooth, burr-free edges on every piece.",
   },
   {
     icon: Heart,
-    title: "Family Values, Professional Results",
-    description: "As a family business, your satisfaction is our reputation. We're not a faceless corporation – we're your partners in creating something beautiful.",
+    title: "Customer Partnership",
+    description: "Your satisfaction is our success. We work closely with you from concept to completion.",
   },
   {
     icon: Target,
-    title: "Modern Technology, Traditional Craftsmanship",
-    description: "We combine state-of-the-art CNC laser cutting technology with traditional metalworking expertise. The best of both worlds.",
+    title: "Innovation & Tradition",
+    description: "State-of-the-art CNC technology combined with traditional metalworking craftsmanship.",
   },
   {
     icon: Eye,
-    title: "Transparent Communication",
-    description: "From quote to delivery, you'll always know where your project stands. We provide photos, updates, and direct access to our team.",
+    title: "Transparency",
+    description: "Clear communication, honest pricing, realistic timelines. No surprises.",
   },
   {
-    icon: Clock,
-    title: "Commitment to Deadlines",
-    description: "We understand project timelines matter. Our efficient process ensures 7-10 day delivery across India without compromising quality.",
+    icon: Award,
+    title: "Continuous Improvement",
+    description: "We're always learning, always improving, always raising our standards.",
   },
 ];
 
+const whyChooseUs = [
+  { icon: Sparkles, title: "Superior Finishing", description: "Our signature 3-step process ensures smooth, burr-free edges." },
+  { icon: Truck, title: "Fast Delivery", description: "7-10 days across India without sacrificing quality." },
+  { icon: Users, title: "Expert Team", description: "15+ years of combined experience in metal fabrication." },
+  { icon: BadgeCheck, title: "Quality Materials", description: "Only premium-grade metals from certified suppliers." },
+  { icon: Wrench, title: "Custom Solutions", description: "From simple name plates to complex architectural installations." },
+  { icon: MapPin, title: "All-India Service", description: "Based in Satna, delivering everywhere." },
+  { icon: Clock, title: "Competitive Pricing", description: "Fair pricing for premium quality. No hidden costs." },
+  { icon: Shield, title: "1-Year Warranty", description: "We stand behind our work with comprehensive warranty." },
+];
+
 const stats = [
-  { value: "15+", label: "Years Experience", description: "Combined expertise in metal fabrication" },
-  { value: "500+", label: "Projects Completed", description: "Successfully delivered across India" },
-  { value: "50+", label: "Cities Served", description: "Nationwide delivery network" },
-  { value: "10,000+", label: "Sq.Ft Cut", description: "Of metal masterfully finished" },
-  { value: "98%", label: "Satisfaction Rate", description: "Happy customers trust us" },
-  { value: "1 Year", label: "Warranty", description: "On all our products" },
+  { value: "15+", label: "Years Experience", description: "Combined expertise" },
+  { value: "500+", label: "Projects Completed", description: "Across India" },
+  { value: "50+", label: "Cities Served", description: "Nationwide network" },
+  { value: "10,000+", label: "Sq.Ft Cut", description: "Metal finished" },
+  { value: "98%", label: "Satisfaction Rate", description: "Happy customers" },
+  { value: "1 Year", label: "Warranty", description: "On all products" },
 ];
 
 const commitments = [
@@ -68,22 +83,22 @@ export default function About() {
     <Layout>
       {/* Hero Section */}
       <section className="relative py-24 lg:py-32 gradient-hero overflow-hidden">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-[hsl(38_70%_50%_/_0.1)] rounded-full blur-3xl" />
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
             <ScrollReveal animation="fade-up" delay={0}>
-              <p className="text-sm font-semibold text-[hsl(38_70%_50%)] uppercase tracking-wider mb-4">
+              <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
                 About Us
               </p>
             </ScrollReveal>
             <ScrollReveal animation="fade-up" delay={0.1}>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[hsl(40_20%_98%)] mb-6">
-                About Agrawal & Son Daughter Enterprises
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6">
+                About ASDE LaserCuttings
               </h1>
             </ScrollReveal>
             <ScrollReveal animation="fade-up" delay={0.2}>
-              <p className="text-xl text-[hsl(40_20%_98%_/_0.8)]">
-                Crafting Excellence in Metal with Precision and Care
+              <p className="text-xl text-primary-foreground/80">
+                Crafting Metal Excellence Since Day One
               </p>
             </ScrollReveal>
           </div>
@@ -96,49 +111,43 @@ export default function About() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <ScrollReveal animation="fade-right">
               <div>
-                <p className="text-sm font-semibold text-[hsl(38_70%_50%)] uppercase tracking-wider mb-4">
-                  Our Story
+                <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
+                  The Beginning
                 </p>
                 <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
                   A Family Legacy of Craftsmanship
                 </h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Agrawal & Son Daughter Enterprises began as a small workshop in 
-                    Satna with a simple philosophy: <strong className="text-foreground">never compromise on quality</strong>. 
-                    What started as a family passion for metalwork has grown into one of 
-                    Madhya Pradesh's most trusted names in CNC laser cutting and metal fabrication.
+                    Founded in Satna, Madhya Pradesh, ASDE LaserCuttings (Agrawal & Son 
+                    Daughter Enterprises) began with a simple philosophy: <strong className="text-foreground">never 
+                    compromise on quality</strong>. What started as a family workshop has grown 
+                    into one of Central India's most trusted names in precision CNC laser cutting.
                   </p>
                   <p>
-                    As a family-run business, we treat every project with the care and 
-                    attention we'd give our own home. The name "Son Daughter" reflects 
-                    our inclusive family values – everyone in the family contributes, 
-                    and everyone's work matters equally.
-                  </p>
-                  <p>
-                    Over the years, we've served over 500 happy customers across India, 
-                    from individual homeowners to large construction companies. But our 
-                    commitment remains the same: premium finishing, honest pricing, and 
-                    customer satisfaction above all.
+                    The name "Son Daughter" reflects our inclusive family values—everyone in 
+                    the family contributes, and everyone's work matters equally. This philosophy 
+                    extends to our team and our customers: every project, large or small, receives 
+                    the same attention to detail and commitment to excellence.
                   </p>
                 </div>
               </div>
             </ScrollReveal>
             <ScrollReveal animation="fade-left" delay={0.2}>
               <div className="relative">
-                <div className="aspect-square rounded-2xl bg-gradient-to-br from-[hsl(40_15%_92%)] to-[hsl(40_10%_85%)] flex items-center justify-center">
+                <div className="aspect-square rounded-2xl bg-gradient-to-br from-secondary to-muted flex items-center justify-center">
                   <div className="text-center p-8">
-                    <div className="h-24 w-24 mx-auto rounded-2xl bg-gradient-to-br from-[hsl(38_70%_50%)] to-[hsl(40_65%_60%)] flex items-center justify-center mb-6">
-                      <Users className="h-12 w-12 text-[hsl(240_15%_13%)]" />
+                    <div className="h-24 w-24 mx-auto rounded-2xl gradient-gold flex items-center justify-center mb-6">
+                      <Users className="h-12 w-12 text-accent-foreground" />
                     </div>
                     <p className="text-xl font-bold text-foreground">Family-Owned</p>
                     <p className="text-muted-foreground">Since Day One</p>
                   </div>
                 </div>
-                <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-xl bg-gradient-to-br from-[hsl(38_70%_50%)] to-[hsl(40_65%_60%)] flex items-center justify-center">
+                <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-xl gradient-gold flex items-center justify-center">
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-[hsl(240_15%_13%)]">500+</p>
-                    <p className="text-xs text-[hsl(240_15%_13%_/_0.8)]">Customers</p>
+                    <p className="text-2xl font-bold text-accent-foreground">500+</p>
+                    <p className="text-xs text-accent-foreground/80">Customers</p>
                   </div>
                 </div>
               </div>
@@ -147,78 +156,80 @@ export default function About() {
         </div>
       </section>
 
-      {/* Philosophy */}
-      <section className="section-padding bg-[hsl(40_30%_95%)]">
+      {/* What Makes Us Different */}
+      <section className="section-padding bg-cream">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="max-w-3xl mx-auto text-center mb-16">
             <ScrollReveal animation="fade-up">
-              <p className="text-sm font-semibold text-[hsl(38_70%_50%)] uppercase tracking-wider mb-4">
-                Our Philosophy
+              <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
+                What Makes Us Different
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
                 Quality is Not Expensive – It's Priceless
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                This belief guides everything we do. While others race to the bottom 
-                with cheaper prices and corner-cutting, we invest time in the one step 
-                that makes all the difference: finishing.
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                While others race to deliver quickly by cutting corners, we invest time 
+                in the one step that makes all the difference: finishing.
               </p>
             </ScrollReveal>
-            <ScrollReveal animation="scale" delay={0.2}>
-              <div className="bg-card rounded-2xl p-8 shadow-sm">
-                <h3 className="text-xl font-bold text-foreground mb-6">
+          </div>
+
+          <ScrollReveal animation="scale">
+            <Card className="bg-card border-border max-w-3xl mx-auto">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold text-foreground mb-6 text-center">
                   Our Rigorous 3-Step Finishing Process
                 </h3>
                 <div className="grid sm:grid-cols-3 gap-6">
                   <div className="text-center">
-                    <div className="h-12 w-12 mx-auto rounded-full bg-[hsl(38_70%_50%_/_0.1)] flex items-center justify-center mb-3">
-                      <span className="text-lg font-bold text-[hsl(38_70%_50%)]">1</span>
+                    <div className="h-12 w-12 mx-auto rounded-full bg-gold/10 flex items-center justify-center mb-3">
+                      <span className="text-lg font-bold text-gold">1</span>
                     </div>
                     <p className="font-semibold text-foreground">Precision Cutting</p>
                     <p className="text-sm text-muted-foreground">0.1mm accuracy</p>
                   </div>
                   <div className="text-center">
-                    <div className="h-12 w-12 mx-auto rounded-full bg-[hsl(38_70%_50%_/_0.1)] flex items-center justify-center mb-3">
-                      <span className="text-lg font-bold text-[hsl(38_70%_50%)]">2</span>
+                    <div className="h-12 w-12 mx-auto rounded-full bg-gold/10 flex items-center justify-center mb-3">
+                      <span className="text-lg font-bold text-gold">2</span>
                     </div>
                     <p className="font-semibold text-foreground">Edge Smoothing</p>
                     <p className="text-sm text-muted-foreground">By skilled craftsmen</p>
                   </div>
                   <div className="text-center">
-                    <div className="h-12 w-12 mx-auto rounded-full bg-[hsl(38_70%_50%_/_0.1)] flex items-center justify-center mb-3">
-                      <span className="text-lg font-bold text-[hsl(38_70%_50%)]">3</span>
+                    <div className="h-12 w-12 mx-auto rounded-full bg-gold/10 flex items-center justify-center mb-3">
+                      <span className="text-lg font-bold text-gold">3</span>
                     </div>
                     <p className="font-semibold text-foreground">Quality Inspection</p>
                     <p className="text-sm text-muted-foreground">Multi-point check</p>
                   </div>
                 </div>
-              </div>
-            </ScrollReveal>
-          </div>
+              </CardContent>
+            </Card>
+          </ScrollReveal>
         </div>
       </section>
 
-      {/* What Sets Us Apart */}
+      {/* Our Values */}
       <section className="section-padding bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal animation="fade-up">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <p className="text-sm font-semibold text-[hsl(38_70%_50%)] uppercase tracking-wider mb-4">
-                Our Difference
+              <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
+                Our Values
               </p>
-              <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
-                What Makes Us Different
+              <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
+                What We Stand For
               </h2>
             </div>
           </ScrollReveal>
 
           <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {values.map((value, index) => (
+            {values.map((value) => (
               <StaggerItem key={value.title}>
                 <Card className="bg-card border-border hover:shadow-lg transition-shadow h-full">
                   <CardContent className="p-8">
-                    <div className="h-14 w-14 rounded-xl bg-[hsl(38_70%_50%_/_0.1)] flex items-center justify-center mb-6">
-                      <value.icon className="h-7 w-7 text-[hsl(38_70%_50%)]" />
+                    <div className="h-14 w-14 rounded-xl bg-gold/10 flex items-center justify-center mb-6">
+                      <value.icon className="h-7 w-7 text-gold" />
                     </div>
                     <h3 className="text-xl font-bold text-foreground mb-3">
                       {value.title}
@@ -234,15 +245,45 @@ export default function About() {
         </div>
       </section>
 
+      {/* Why Choose Us */}
+      <section className="section-padding bg-secondary">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal animation="fade-up">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
+                Why Choose Us
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
+                The ASDE Advantage
+              </h2>
+            </div>
+          </ScrollReveal>
+
+          <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {whyChooseUs.map((item) => (
+              <StaggerItem key={item.title}>
+                <div className="text-center p-6">
+                  <div className="h-12 w-12 mx-auto rounded-lg bg-gold/10 flex items-center justify-center mb-4">
+                    <item.icon className="h-6 w-6 text-gold" />
+                  </div>
+                  <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </section>
+
       {/* By The Numbers */}
       <section className="section-padding gradient-hero">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal animation="fade-up">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <p className="text-sm font-semibold text-[hsl(38_70%_50%)] uppercase tracking-wider mb-4">
+              <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
                 Our Journey
               </p>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[hsl(40_20%_98%)] mb-6">
+              <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground mb-6">
                 Our Journey in Numbers
               </h2>
             </div>
@@ -252,9 +293,9 @@ export default function About() {
             {stats.map((stat) => (
               <StaggerItem key={stat.label}>
                 <div className="text-center">
-                  <p className="text-3xl sm:text-4xl font-bold text-[hsl(38_70%_50%)]">{stat.value}</p>
-                  <p className="text-sm font-semibold text-[hsl(40_20%_98%)] mt-2">{stat.label}</p>
-                  <p className="text-xs text-[hsl(40_20%_98%_/_0.6)] mt-1">{stat.description}</p>
+                  <p className="text-3xl sm:text-4xl font-bold text-gold">{stat.value}</p>
+                  <p className="text-sm font-semibold text-primary-foreground mt-2">{stat.label}</p>
+                  <p className="text-xs text-primary-foreground/60 mt-1">{stat.description}</p>
                 </div>
               </StaggerItem>
             ))}
@@ -267,44 +308,39 @@ export default function About() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <ScrollReveal animation="fade-right" className="order-2 lg:order-1">
-              <div className="aspect-video rounded-2xl bg-gradient-to-br from-[hsl(40_15%_92%)] to-[hsl(40_10%_85%)] flex items-center justify-center">
+              <div className="aspect-video rounded-2xl bg-gradient-to-br from-secondary to-muted flex items-center justify-center">
                 <div className="text-center p-8">
-                  <MapPin className="h-16 w-16 mx-auto text-[hsl(38_70%_50%)] mb-4" />
+                  <MapPin className="h-16 w-16 mx-auto text-gold mb-4" />
                   <p className="text-xl font-bold text-foreground">Our Workshop</p>
-                  <p className="text-muted-foreground">Satna, Madhya Pradesh</p>
+                  <p className="text-muted-foreground">5,000+ sq.ft in Satna, MP</p>
                 </div>
               </div>
             </ScrollReveal>
             <ScrollReveal animation="fade-left" delay={0.2} className="order-1 lg:order-2">
               <div>
-                <p className="text-sm font-semibold text-[hsl(38_70%_50%)] uppercase tracking-wider mb-4">
+                <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
                   Our Facility
                 </p>
                 <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
-                  State-of-the-Art Facility in Satna
+                  State-of-the-Art Workshop
                 </h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Located in Satna, Madhya Pradesh, our facility is equipped with 
-                    modern CNC laser cutting machines, finishing equipment, and a 
-                    dedicated quality control area.
+                    Our 5,000+ square foot facility in Satna houses advanced CNC laser 
+                    cutting machines, precision equipment (accurate to 0.1mm), dedicated 
+                    finishing workshop, and quality control area.
                   </p>
                   <p>
-                    We've invested in technology to ensure precision, but we've kept 
-                    the human touch where it matters – in finishing and quality inspection.
-                  </p>
-                  <p>
-                    Our workshop is where innovation meets craftsmanship. Every team 
-                    member takes pride in their work, knowing that their attention to 
-                    detail is what makes Agrawal & Son Daughter Enterprises special.
+                    We've invested in technology to ensure precision, but we've kept the 
+                    human touch where it matters most: in finishing and quality inspection.
                   </p>
                 </div>
-                <div className="mt-8 p-4 bg-[hsl(38_70%_50%_/_0.1)] rounded-lg">
+                <div className="mt-8 p-4 bg-gold/10 rounded-lg">
                   <p className="text-sm font-semibold text-foreground">
                     🏭 Want to visit? We welcome customers to tour our facility!
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    See our process firsthand and understand why our finishing makes all the difference.
+                    See our process firsthand. Schedule a visit via the contact page.
                   </p>
                 </div>
               </div>
@@ -314,25 +350,25 @@ export default function About() {
       </section>
 
       {/* Our Commitment */}
-      <section className="section-padding bg-[hsl(40_30%_95%)]">
+      <section className="section-padding bg-cream">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <ScrollReveal animation="fade-up">
-              <p className="text-sm font-semibold text-[hsl(38_70%_50%)] uppercase tracking-wider mb-4">
+              <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
                 Our Promise
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
                 Our Commitment to You
               </h2>
               <p className="text-lg text-muted-foreground mb-10">
-                When you choose Agrawal & Son Daughter Enterprises, you're getting:
+                When you choose ASDE LaserCuttings, you're getting:
               </p>
             </ScrollReveal>
             <StaggerContainer className="grid sm:grid-cols-2 gap-4 text-left">
               {commitments.map((commitment) => (
                 <StaggerItem key={commitment}>
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-[hsl(38_70%_50%)] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-5 w-5 text-gold shrink-0 mt-0.5" />
                     <span className="text-foreground">{commitment}</span>
                   </div>
                 </StaggerItem>
@@ -361,7 +397,7 @@ export default function About() {
                   </Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
-                  <Link to="/products/railings">
+                  <Link to="/gallery">
                     See Our Work
                   </Link>
                 </Button>
