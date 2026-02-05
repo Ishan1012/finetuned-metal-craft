@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { CartIcon } from "@/components/shop/CartIcon";
 
 const whatWeMake = [
   { name: "Overview", href: "/products" },
@@ -24,6 +25,7 @@ const yourProject = [
 const navigation = [
   { name: "Home", href: "/" },
   { name: "What We Make", href: "/products", hasDropdown: true, items: whatWeMake },
+  { name: "Shop", href: "/shop" },
   { name: "Your Project", href: "/your-project", hasDropdown: true, items: yourProject },
   { name: "Gallery", href: "/gallery" },
   { name: "About", href: "/about" },
@@ -121,7 +123,8 @@ export function Header() {
           </div>
 
           {/* CTA */}
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4">
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-3">
+            <CartIcon />
             <Button variant="gold" size="default" asChild>
               <Link to="/contact">
                 <Phone className="h-4 w-4" />
