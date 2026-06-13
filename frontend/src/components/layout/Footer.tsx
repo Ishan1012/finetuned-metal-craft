@@ -31,12 +31,17 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="flex lg:flex-1 pb-4">
-              <Link to="/" className="flex items-center">
+              <Link to="/" className="flex items-center gap-3">
                 <img
                   src="/logo2.jpeg"
                   alt="Finetuned Metal Craft Logo"
-                  className="h-[10vh] w-auto object-contain shrink-0"
+                  className="h-[10vh] w-auto object-contain shrink-0 rounded-sm"
                 />
+                <div>
+                  <p className="text-lg font-bold leading-tight">
+                    ASDE LaserCuttings
+                  </p>
+                </div>
               </Link>
             </div>
             <p className="text-primary-foreground/80 text-sm leading-relaxed mb-6">

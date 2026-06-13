@@ -47,12 +47,17 @@ export function Header() {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <div className="flex lg:flex-1">
-            <Link to="/" className="flex items-center">
-              <img 
-                src="/logo3.png" 
-                alt="Finetuned Metal Craft Logo" 
-                className="h-[10vh] w-auto object-contain shrink-0" 
+            <Link to="/" className="flex items-center gap-3">
+              <img
+                src="/logo3.png"
+                alt="Finetuned Metal Craft Logo"
+                className="h-[10vh] w-auto object-contain shrink-0"
               />
+              <div className="hidden sm:block">
+                <p className="text-lg font-bold text-foreground leading-tight">
+                  ASDE LaserCuttings
+                </p>
+              </div>
             </Link>
           </div>
 
