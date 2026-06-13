@@ -59,15 +59,6 @@ const whyChooseUs = [
   { icon: Shield, title: "1-Year Warranty", description: "We stand behind our work with comprehensive warranty." },
 ];
 
-const stats = [
-  { value: "5+", label: "Years Experience", description: "Combined expertise" },
-  { value: "50K+", label: "Happy Customers", description: "Across India" },
-  { value: "50+", label: "Cities Served", description: "Nationwide network" },
-  { value: "10,000+", label: "Sq.Ft Cut", description: "Metal finished" },
-  { value: "98%", label: "Satisfaction Rate", description: "Happy customers" },
-  { value: "1 Year", label: "Warranty", description: "On all products" },
-];
-
 const commitments = [
   "Honest Pricing – No hidden costs, transparent quotes",
   "Quality Guarantee – 1-year warranty on all products",
@@ -264,34 +255,6 @@ export default function About() {
                   </div>
                   <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
                   <p className="text-sm text-muted-foreground">{item.description}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* By The Numbers */}
-      <section className="section-padding gradient-hero">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollReveal animation="fade-up">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
-                Our Journey
-              </p>
-              <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground mb-6">
-                Our Journey in Numbers
-              </h2>
-            </div>
-          </ScrollReveal>
-
-          <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            {stats.map((stat) => (
-              <StaggerItem key={stat.label}>
-                <div className="text-center">
-                  <p className="text-3xl sm:text-4xl font-bold text-gold">{stat.value}</p>
-                  <p className="text-sm font-semibold text-primary-foreground mt-2">{stat.label}</p>
-                  <p className="text-xs text-primary-foreground/60 mt-1">{stat.description}</p>
                 </div>
               </StaggerItem>
             ))}
