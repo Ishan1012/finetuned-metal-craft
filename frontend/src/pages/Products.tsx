@@ -5,16 +5,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
-// Import images
-import railingGeometric1 from "@/assets/gallery/railing-geometric-1.png";
-import elevationOrganic from "@/assets/gallery/elevation-organic.png";
-
 const products = [
   {
     id: "railings",
     title: "Metal Railings",
     description: "Enhance staircases, balconies, terraces, and mezzanines with durable, aesthetically striking railings. Available in Stainless Steel, Mild Steel, and Aluminium with custom designs.",
-    image: railingGeometric1,
+    image: '/images/railing.jpeg',
     features: ["Custom designs - traditional to contemporary", "Safety-compliant", "Weather-resistant options", "Easy installation"],
     applications: ["Staircases", "Balconies", "Terraces", "Mezzanines"],
     href: "/products/railings",
@@ -23,7 +19,7 @@ const products = [
     id: "elevation",
     title: "Metal Elevation & Cladding",
     description: "Transform building exteriors with stunning laser-cut metal facades and decorative panels. Architectural cladding that marries aesthetics, code compliance, and visual impact.",
-    image: elevationOrganic,
+    image: '/images/elevation.jpeg',
     features: ["Intricate patterns possible", "Weather-resistant", "Energy-efficient options", "Modern architectural appeal"],
     applications: ["Building facades", "Exterior accent walls", "Entrance features", "Parking screens"],
     href: "/products/elevation",
@@ -32,7 +28,7 @@ const products = [
     id: "nameplates",
     title: "Name Plates & Signage",
     description: "Make a lasting impression with precision-cut name plates for homes and businesses. Laser-cut precision in Brass, Copper, Stainless Steel, and more.",
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
+    image: '/images/nameplate.jpeg',
     features: ["Custom fonts and designs", "Multi-language support", "Logo integration", "Weather-proof options"],
     applications: ["Residential", "Corporate signage", "Hotel room numbers", "Memorial plaques"],
     href: "/products/nameplates",
@@ -41,7 +37,7 @@ const products = [
     id: "gates",
     title: "Gates & Grills",
     description: "Secure and stylish entry solutions, perfect for private communities, retail spaces, or estates. Custom-designed gates and window grills that combine security with aesthetics.",
-    image: "https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80",
+    image: '/images/gates.jpeg',
     features: ["High security", "Decorative designs", "Motorization-ready", "Rust-proof options"],
     applications: ["Main entrance gates", "Compound gates", "Window grills", "Safety grills"],
     href: "/products/gates",
@@ -50,7 +46,7 @@ const products = [
     id: "dividers",
     title: "Room Dividers & Partitions",
     description: "Segment open-concept layouts with functional, artful metal partitions. Perfect for creating privacy while maintaining visual flow in modern spaces.",
-    image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80",
+    image: '/images/dividers.jpeg',
     features: ["Custom patterns", "Freestanding or fixed", "Acoustic options available", "Easy maintenance"],
     applications: ["Office space division", "Restaurant privacy screens", "Hotel lobby dividers", "Retail displays"],
     href: "/products/dividers",
@@ -59,7 +55,7 @@ const products = [
     id: "custom",
     title: "Custom Laser Cutting",
     description: "Have a unique design in mind? We bring your vision to life with precision CNC laser cutting. No design too complex, no project too ambitious.",
-    image: "https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&q=80",
+    image: '/images/custom.jpeg',
     features: ["Decorative wall art", "Custom furniture accents", "Signage and logos", "Artistic installations"],
     applications: ["Any metal - SS, MS, Aluminium, Brass, Copper", "Thickness up to 25mm", "Size up to 4ft × 8ft panels"],
     href: "/products/custom",
