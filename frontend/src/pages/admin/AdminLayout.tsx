@@ -8,7 +8,7 @@ export default function AdminLayout() {
 
   const handleLogout = () => {
     logout();
-    navigate("/admin/login");
+    navigate("/shop");
   };
 
   return (
@@ -16,7 +16,13 @@ export default function AdminLayout() {
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r shadow-sm flex flex-col">
         <div className="p-6 border-b">
-          <h2 className="text-xl font-bold">Admin Panel</h2>
+          <Link to="/" className="flex items-center">
+            <img
+              src="/logo3.png"
+              alt="Finetuned Metal Craft Logo"
+              className="h-[10vh] w-auto object-contain shrink-0"
+            />
+          </Link>
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link to="/admin" className="block px-4 py-2 rounded hover:bg-gray-100">Dashboard</Link>
@@ -24,8 +30,8 @@ export default function AdminLayout() {
           <Link to="/admin/orders" className="block px-4 py-2 rounded hover:bg-gray-100">Orders</Link>
         </nav>
         <div className="p-4 border-t">
-          <Button variant="destructive" className="w-full" onClick={handleLogout}>
-            Logout
+          <Button variant="outline" className="w-full" onClick={handleLogout}>
+            Back to Store
           </Button>
         </div>
       </aside>

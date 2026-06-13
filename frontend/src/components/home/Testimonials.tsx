@@ -44,7 +44,7 @@ export function Testimonials() {
           </ScrollReveal>
           <ScrollReveal animation="fade-up" delay={0.2}>
             <p className="text-lg text-muted-foreground">
-              Join 500+ satisfied customers who chose quality over shortcuts.
+              Join 50K+ satisfied customers who chose quality over shortcuts.
             </p>
           </ScrollReveal>
         </div>

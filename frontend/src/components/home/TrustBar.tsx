@@ -1,7 +1,7 @@
 import { CheckCircle2, Truck, Shield, Sparkles } from "lucide-react";
 
 const trustItems = [
-  { icon: CheckCircle2, text: "500+ Happy Customers" },
+  { icon: CheckCircle2, text: "50K+ Happy Customers" },
   { icon: Truck, text: "All India Delivery" },
   { icon: Shield, text: "1 Year Warranty" },
   { icon: Sparkles, text: "Premium Finishing Guaranteed" },

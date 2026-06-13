@@ -58,7 +58,7 @@ export default function Gates() {
             <ScrollReveal animation="fade-right">
               <div className="aspect-[4/3] rounded-xl overflow-hidden bg-muted">
                 <img 
-                  src="https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80" 
+                  src="/images/gates.jpeg" 
                   alt="Decorative metal gate" 
                   className="w-full h-full object-cover" 
                 />

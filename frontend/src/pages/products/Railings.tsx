@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  CheckCircle2, 
-  ArrowRight, 
+import {
+  CheckCircle2,
+  ArrowRight,
   Star,
   Fence,
   Building,
@@ -14,7 +14,6 @@ import {
   Clock,
   Sparkles
 } from "lucide-react";
-import heroRailings from "@/assets/hero-railings.jpg";
 
 const railingTypes = [
   {
@@ -89,7 +88,7 @@ export default function Railings() {
       <section className="relative py-24 lg:py-32 overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={heroRailings}
+            src={'/images/railing.jpeg'}
             alt="Elegant stainless steel staircase railing"
             className="w-full h-full object-cover"
           />
@@ -104,7 +103,7 @@ export default function Railings() {
               Premium Metal Railings
             </h1>
             <p className="text-xl text-[hsl(40_20%_98%_/_0.8)] mb-8">
-              Precision-cut railings for staircases, balconies, and terraces. 
+              Precision-cut railings for staircases, balconies, and terraces.
               Every edge smoothed, every piece installation-ready.
             </p>
             <Button variant="hero" size="xl" asChild>
@@ -122,11 +121,11 @@ export default function Railings() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Transform your spaces with our precision-cut metal railings. Whether 
-              you're securing a staircase, beautifying a balcony, or adding elegance 
-              to a terrace, our railings combine safety with stunning design. Available 
-              in multiple materials and finishes, each railing is custom-cut to your 
-              exact specifications and undergoes our signature finishing process for 
+              Transform your spaces with our precision-cut metal railings. Whether
+              you're securing a staircase, beautifying a balcony, or adding elegance
+              to a terrace, our railings combine safety with stunning design. Available
+              in multiple materials and finishes, each railing is custom-cut to your
+              exact specifications and undergoes our signature finishing process for
               smooth, splinter-free edges.
             </p>
           </div>
@@ -246,8 +245,8 @@ export default function Railings() {
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  <strong className="text-foreground">The Finishing Difference:</strong> Most 
-                  manufacturers deliver rough-cut railings with sharp edges that need 
+                  <strong className="text-foreground">The Finishing Difference:</strong> Most
+                  manufacturers deliver rough-cut railings with sharp edges that need
                   on-site finishing. Not us.
                 </p>
                 <p>Our 3-step finishing process means:</p>
@@ -269,11 +268,11 @@ export default function Railings() {
             </div>
             <div className="relative">
               <div className="aspect-square rounded-2xl bg-gradient-to-br from-[hsl(40_15%_92%)] to-[hsl(40_10%_85%)] flex items-center justify-center">
-                <div className="text-center p-8">
-                  <Sparkles className="h-20 w-20 mx-auto text-[hsl(38_70%_50%)] mb-4" />
-                  <p className="text-2xl font-bold text-foreground">Premium Finishing</p>
-                  <p className="text-muted-foreground">Every Edge Perfected</p>
-                </div>
+                <img
+                  src={'/images/railing.jpeg'}
+                  alt="Elegant stainless steel staircase railing"
+                  className="w-full h-full object-cover rounded-2xl"
+                />
               </div>
             </div>
           </div>
@@ -335,9 +334,8 @@ export default function Railings() {
               ].map((spec, index) => (
                 <div
                   key={spec.label}
-                  className={`flex justify-between items-center p-4 ${
-                    index !== 6 ? "border-b border-border" : ""
-                  }`}
+                  className={`flex justify-between items-center p-4 ${index !== 6 ? "border-b border-border" : ""
+                    }`}
                 >
                   <span className="font-medium text-foreground">{spec.label}</span>
                   <span className="text-muted-foreground">{spec.value}</span>
@@ -348,50 +346,8 @@ export default function Railings() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="section-padding bg-[hsl(40_30%_95%)]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <p className="text-sm font-semibold text-[hsl(38_70%_50%)] uppercase tracking-wider mb-4">
-              Customer Reviews
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-              What Our Customers Say
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {testimonials.map((testimonial) => (
-              <Card key={testimonial.author} className="bg-card border-border">
-                <CardContent className="p-8">
-                  <div className="flex gap-1 mb-4">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-[hsl(38_70%_50%)] text-[hsl(38_70%_50%)]" />
-                    ))}
-                  </div>
-                  <p className="text-foreground leading-relaxed mb-6">
-                    "{testimonial.content}"
-                  </p>
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[hsl(38_70%_50%)] to-[hsl(40_65%_60%)] flex items-center justify-center">
-                      <span className="font-bold text-[hsl(240_15%_13%)]">
-                        {testimonial.author.charAt(0)}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-foreground">{testimonial.author}</p>
-                      <p className="text-sm text-muted-foreground">{testimonial.location}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
-      <section className="section-padding bg-background">
+      <section className="section-padding bg-[hsl(40_30%_95%)]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">

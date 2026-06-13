@@ -60,8 +60,8 @@ const whyChooseUs = [
 ];
 
 const stats = [
-  { value: "15+", label: "Years Experience", description: "Combined expertise" },
-  { value: "500+", label: "Projects Completed", description: "Across India" },
+  { value: "5+", label: "Years Experience", description: "Combined expertise" },
+  { value: "50K+", label: "Happy Customers", description: "Across India" },
   { value: "50+", label: "Cities Served", description: "Nationwide network" },
   { value: "10,000+", label: "Sq.Ft Cut", description: "Metal finished" },
   { value: "98%", label: "Satisfaction Rate", description: "Happy customers" },
@@ -146,7 +146,7 @@ export default function About() {
                 </div>
                 <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-xl gradient-gold flex items-center justify-center">
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-accent-foreground">500+</p>
+                    <p className="text-2xl font-bold text-accent-foreground">50K+</p>
                     <p className="text-xs text-accent-foreground/80">Customers</p>
                   </div>
                 </div>
@@ -387,7 +387,7 @@ export default function About() {
                 Ready to Experience the Difference?
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Join 500+ satisfied customers who chose quality over shortcuts.
+                Join 50K+ satisfied customers who chose quality over shortcuts.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <Button variant="gold" size="lg" asChild>

@@ -24,6 +24,11 @@ const specs = [
 ];
 
 export default function CustomCutting() {
+
+  const gallery = [
+    { src: '/images/custom2.jpeg', alt: "Custom Cutting 2" },
+    { src: '/images/custom.jpeg', alt: "Custom Cutting 1" },
+  ];
   return (
     <Layout>
       {/* Hero */}
@@ -43,7 +48,7 @@ export default function CustomCutting() {
             </ScrollReveal>
             <ScrollReveal animation="fade-up" delay={0.2}>
               <p className="text-xl text-primary-foreground/80">
-                Have a unique design in mind? We bring your vision to life with precision 
+                Have a unique design in mind? We bring your vision to life with precision
                 CNC laser cutting. No design too complex, no project too ambitious.
               </p>
             </ScrollReveal>
@@ -57,12 +62,12 @@ export default function CustomCutting() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Image */}
             <ScrollReveal animation="fade-right">
-              <div className="aspect-[4/3] rounded-xl overflow-hidden bg-muted">
-                <img 
-                  src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&q=80" 
-                  alt="Custom laser cut metal art" 
-                  className="w-full h-full object-cover" 
-                />
+              <div className="space-y-4">
+                {gallery.map((img, i) => (
+                  <div key={i} className="aspect-[4/3] rounded-xl overflow-hidden bg-muted">
+                    <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
+                  </div>
+                ))}
               </div>
             </ScrollReveal>
 
@@ -73,9 +78,9 @@ export default function CustomCutting() {
                   Your Vision, Our Precision
                 </h2>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  From intricate wall art to functional architectural elements, our 
-                  custom laser cutting service brings any design to life. Share your 
-                  concept—whether it's a rough sketch, a CAD file, or just an idea—and 
+                  From intricate wall art to functional architectural elements, our
+                  custom laser cutting service brings any design to life. Share your
+                  concept—whether it's a rough sketch, a CAD file, or just an idea—and
                   we'll work with you to create something truly unique.
                 </p>
 
@@ -146,7 +151,7 @@ export default function CustomCutting() {
                 Ready to Create Something Unique?
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Share your design or idea with us. We'll provide a free consultation 
+                Share your design or idea with us. We'll provide a free consultation
                 and quote within 24 hours.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">

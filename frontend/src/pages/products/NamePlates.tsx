@@ -13,7 +13,6 @@ import {
   Palette,
   Languages
 } from "lucide-react";
-import heroNameplates from "@/assets/hero-nameplates.jpg";
 
 const plateTypes = [
   {
@@ -124,7 +123,7 @@ export default function NamePlates() {
       <section className="relative py-24 lg:py-32 overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={heroNameplates}
+            src={'/images/nameplate.jpeg'}
             alt="Premium brass name plate on slate wall"
             className="w-full h-full object-cover"
           />

@@ -30,19 +30,17 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="h-10 w-10 rounded-lg gradient-gold flex items-center justify-center">
-                <span className="text-xl font-bold text-accent-foreground">A</span>
-              </div>
-              <div>
-                <p className="text-lg font-bold leading-tight">
-                  Agrawal & Son Daughter
-                </p>
-                <p className="text-xs text-primary-foreground/70">Enterprises</p>
-              </div>
+            <div className="flex lg:flex-1 pb-4">
+              <Link to="/" className="flex items-center">
+                <img
+                  src="/logo2.jpeg"
+                  alt="Finetuned Metal Craft Logo"
+                  className="h-[10vh] w-auto object-contain shrink-0"
+                />
+              </Link>
             </div>
             <p className="text-primary-foreground/80 text-sm leading-relaxed mb-6">
-              Premium CNC laser cutting with the finishing others skip. 
+              Premium CNC laser cutting with the finishing others skip.
               Delivering excellence in metal fabrication across India.
             </p>
             <div className="flex gap-4">
@@ -114,10 +112,10 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <Mail className="h-5 w-5 text-gold shrink-0 mt-0.5" />
                 <a
-                  href="mailto:info@agrawalsonsdaughter.com"
+                  href="mailto:contact@asdelasercuttings.com"
                   className="text-sm text-primary-foreground/80 hover:text-gold transition-colors"
                 >
-                  info@agrawalsonsdaughter.com
+                  contact@asdelasercuttings.com
                 </a>
               </li>
               <li className="flex items-start gap-3">

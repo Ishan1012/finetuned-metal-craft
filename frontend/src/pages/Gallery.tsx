@@ -231,7 +231,7 @@ export default function Gallery() {
             </ScrollReveal>
             <ScrollReveal animation="fade-up" delay={0.1}>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6">
-                500+ Projects Delivered Across India
+                50K+ Happy Customers Across India
               </h1>
             </ScrollReveal>
             <ScrollReveal animation="fade-up" delay={0.2}>
@@ -411,12 +411,11 @@ export default function Gallery() {
       {/* Stats Section */}
       <section className="py-16 bg-secondary">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <StaggerContainer className="grid grid-cols-3 md:grid-cols-3 gap-8 text-center">
             {[
-              { value: "500+", label: "Projects Completed" },
-              { value: "50+", label: "Cities Served" },
-              { value: "98%", label: "Satisfaction Rate" },
-              { value: "15+", label: "Years Experience" },
+              { value: "50K+", label: "Projects Completed" },
+              { value: "5+", label: "Years Experience" },
+              { value: "5Lakh+", label: "Sqft of Metal finished" },
             ].map((stat) => (
               <StaggerItem key={stat.label}>
                 <p className="text-3xl sm:text-4xl font-bold text-gold">

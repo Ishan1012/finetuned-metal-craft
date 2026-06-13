@@ -1,12 +1,8 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
+import { ScrollReveal } from "@/components/common/ScrollReveal";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-
-import elevationOrganic from "@/assets/gallery/elevation-organic.png";
-import elevationFloral from "@/assets/gallery/elevation-floral.png";
 
 const features = [
   "Intricate patterns possible",
@@ -27,8 +23,7 @@ const applications = [
 ];
 
 const gallery = [
-  { src: elevationOrganic, alt: "Organic pattern elevation panel" },
-  { src: elevationFloral, alt: "Floral geometric elevation panel" },
+  { src: '/images/elevation.jpeg', alt: "elevation panel" },
 ];
 
 export default function Elevation() {

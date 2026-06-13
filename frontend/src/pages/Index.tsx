@@ -14,7 +14,7 @@ const Index = () => {
   return (
     <Layout>
       <Hero />
-      <TrustBar />
+      {/* <TrustBar /> */}
       <Introduction />
       <ValueProposition />
       <ProductShowcase />

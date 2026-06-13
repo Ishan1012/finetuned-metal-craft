@@ -58,7 +58,7 @@ export default function Dividers() {
             <ScrollReveal animation="fade-right">
               <div className="aspect-[4/3] rounded-xl overflow-hidden bg-muted">
                 <img 
-                  src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80" 
+                  src="/images/dividers.jpeg" 
                   alt="Metal room divider" 
                   className="w-full h-full object-cover" 
                 />
