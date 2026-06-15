@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { saveUserOtp } from './userService';
 import bcrypt from 'bcrypt';
-import { emailQueue } from '../lib/queue';
+import { sendEmail } from './emailService';
 
 export const generateAndSendOtp = async (adminId: string, email: string) => {
   // 1. Generate a 6-digit code
@@ -20,12 +20,7 @@ export const generateAndSendOtp = async (adminId: string, email: string) => {
     </div>
   `;
 
-  await emailQueue.add('sendEmail', {
-    email,
-    subject,
-    text,
-    html
-  });
+  await sendEmail(email, subject, text, html);
 
   return true;
 };
