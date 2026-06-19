@@ -51,7 +51,7 @@ export default function AdminLogin() {
         <CardHeader className="space-y-1 text-center pb-8 pt-4 relative z-10">
           <div className="flex justify-center mb-6">
             {/* Replace with your actual logo component or <img> */}
-            <img src="/src/assets/logo2.jpeg" alt="Company Logo" className="h-16 w-auto" />
+            <img src="/logo2.jpeg" alt="Company Logo" className="h-16 w-auto" />
           </div>
           <CardTitle className="text-3xl text-neutral-950">ASDE Laser Cutting</CardTitle>
           <CardDescription className="text-neutral-600 text-base">
