@@ -30,7 +30,7 @@ export default function AdminLayout() {
       `}>
         <div className="p-6 border-b border-[#F3E5D5]">
           <Link to="/" className="flex items-center justify-center">
-            <img src="/src/assets/logo2.jpeg" alt="Logo" className="h-16 w-auto" />
+            <img src="/logo2.jpeg" alt="Logo" className="h-16 w-auto" />
           </Link>
           <h2 className="mt-4 text-xl font-bold text-center text-[#E4A143]">ASDE Laser Cutting</h2>
           <h4 className="text-md font-bold text-center">Admin Panel</h4>

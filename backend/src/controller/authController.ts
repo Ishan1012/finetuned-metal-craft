@@ -5,21 +5,31 @@ import { clearUserOtp, getUserByEmail, getUserById } from '../services/userServi
 import { generateToken } from '../services/tokenService';
 
 export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const user = await getUserByEmail(email);
+    const user = await getUserByEmail(email);
 
-  if (!user || !(await verifyPassword(password, user.passwordHash))) {
-    return res.status(401).json({ error: "Invalid credentials" });
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const isPasswordValid = await verifyPassword(password, user.passwordHash);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const userId = user._id.toString();
+
+    await generateAndSendOtp(userId, user.email);
+
+    const tempToken = generateToken({ userId, step: "2FA" }, '5m');
+
+    res.json({ message: "OTP sent", tempToken, requires2FA: true });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(401).json({ error: "Authentication failed" });
   }
-
-  const userId = user._id.toString();
-
-  await generateAndSendOtp(userId, user.email);
-
-  const tempToken = generateToken({ userId, step: "2FA" }, '5m');
-
-  res.json({ message: "OTP sent", tempToken, requires2FA: true });
 };
 
 export const verifyOtp = async (req: Request, res: Response) => {
@@ -28,7 +38,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
   try {
     const decoded = jwt.verify(tempToken, process.env.JWT_SECRET!) as any;
     const user = await getUserById(decoded.userId);
-    
+
     if (decoded.step !== "2FA") {
       return res.status(401).json({ error: "Invalid token type" });
     }
@@ -49,6 +59,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
 
     res.json({ message: "Login successful", token: finalToken });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(401).json({ error: "Authentication failed" });
   }
 };
