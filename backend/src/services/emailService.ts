@@ -1,8 +1,8 @@
-import resend from "../config/Resend";
+import transporter from "../config/NodeMailer";
 
 export const sendEmail = async (to: string, subject: string, text: string, html: string) => {
     try {
-        await resend.emails.send({
+        await transporter.sendMail({
             from: `"Admin Portal" <${process.env.SMTP_USER}>`,
             to,
             subject,
