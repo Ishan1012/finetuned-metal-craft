@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Eye } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const CAROUSEL_IMAGES = ["/images/img2.jpeg", "/images/img3.jpeg", "/images/img4.jpeg"];
+const CAROUSEL_IMAGES = ["/images/hero1.jpeg", "/images/img3.jpeg", "/images/img4.jpeg"];
 const SLIDE_DURATION = 3000;
 
 export function Hero() {

@@ -74,26 +74,10 @@ export default function About() {
     <Layout>
       {/* Hero Section */}
       <section className="relative py-24 lg:py-32 gradient-hero overflow-hidden">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-3xl">
-            <ScrollReveal animation="fade-up" delay={0}>
-              <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
-                About Us
-              </p>
-            </ScrollReveal>
-            <ScrollReveal animation="fade-up" delay={0.1}>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6">
-                About ASDE LaserCuttings
-              </h1>
-            </ScrollReveal>
-            <ScrollReveal animation="fade-up" delay={0.2}>
-              <p className="text-xl text-primary-foreground/80">
-                Crafting Metal Excellence Since Day One
-              </p>
-            </ScrollReveal>
-          </div>
-        </div>
+        <div
+          className="absolute inset-0 z-0 bg-[url('/images/about.jpeg')] bg-cover bg-center bg-no-repeat opacity-50"
+          aria-hidden="true"
+        />
       </section>
 
       {/* Our Story */}
@@ -269,17 +253,17 @@ export default function About() {
             <ScrollReveal animation="fade-right" className="order-2 lg:order-1">
               <div className="aspect-video rounded-2xl bg-gradient-to-br from-secondary to-muted flex items-center justify-center">
                 <div className="relative rounded-xl aspect-video overflow-hidden shadow-lg">
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-auto object-cover"
-                >
-                  <source src="/videos/machine.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-auto object-cover"
+                  >
+                    <source src="/videos/machine.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
             </ScrollReveal>
             <ScrollReveal animation="fade-left" delay={0.2} className="order-1 lg:order-2">
