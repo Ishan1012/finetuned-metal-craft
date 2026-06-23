@@ -28,18 +28,6 @@ export default function ManageOrders() {
     }
   };
 
-  const fetchOrderById = async (id: string) => {
-    try {
-      setLoading(true);
-
-    } catch (error) {
-      console.error('Failed to fetch orders:', error);
-      toast.error('Failed to load orders');
-    } finally {
-      setLoading(false);
-    }
-  }
-
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     try {
       setUpdating(orderId);
