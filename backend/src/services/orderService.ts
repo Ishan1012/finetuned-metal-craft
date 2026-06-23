@@ -1,30 +1,60 @@
-import * as orderRepository from '../repository/orderRepository';
+import { 
+  findAllOrdersRepo, 
+  findOrderByIdRepo, 
+  createCheckoutOrderRepo, 
+  updateOrderStatusRepo 
+} from '../repository/orderRepository';
+
+export const findAllOrders = async () => {
+  const orders = await findAllOrdersRepo();
+  if (orders) {
+    return orders.map(order => {
+      const plainOrder = order.toObject();
+      return {
+        ...plainOrder,
+        date: order.createdAt.toISOString().slice(0, 10),
+        createdAt: undefined
+      };
+    });
+  }
+  return [];
+};
+
+export const findOrderById = async (id: string) => {
+  const order = await findOrderByIdRepo(id);
+
+  if (!order) return null;
+
+  const plainOrder = order.toObject();
+  return {
+    ...plainOrder,
+    date: order.createdAt.toISOString().slice(0, 10),
+    createdAt: undefined
+  };
+};
 
 export const createCheckoutOrder = async (orderData: any, razorpayOrderId: string) => {
-    const formattedOrder = {
-        customerName: orderData.customerName,
-        email: orderData.email,
-        phone: orderData.phone,
-        shippingAddress: orderData.shippingAddress,
-        items: orderData.items,
-        subtotal: orderData.subtotal,
-        shippingFee: orderData.shippingFee,
-        totalAmount: orderData.totalAmount,
-        razorpayOrderId: razorpayOrderId,
-        status: 'Created' // Default status 
-    };
+  const order = await createCheckoutOrderRepo(orderData, razorpayOrderId);
 
-    return await orderRepository.createOrder(formattedOrder);
-};
+  if (!order) return null;
 
-export const getAllOrders = async () => {
-    return await orderRepository.findAllOrders();
-};
-
-export const getOrderById = async (id: string) => {
-    return await orderRepository.findOrderById(id);
+  const plainOrder = order.toObject();
+  return {
+    ...plainOrder,
+    date: order.createdAt.toISOString().slice(0, 10),
+    createdAt: undefined
+  };
 };
 
 export const updateOrderStatus = async (id: string, status: string) => {
-    return await orderRepository.updateOrderStatus(id, status);
+  const order = await updateOrderStatusRepo(id, status);
+
+  if (!order) return null;
+
+  const plainOrder = order.toObject();
+  return {
+    ...plainOrder,
+    date: order.createdAt.toISOString().slice(0, 10),
+    createdAt: undefined
+  };
 };

@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
-import { Product } from "@/types/admin";
+import { Product } from "@/types/Types";
 
 interface ProductCardProps {
   product: Product;

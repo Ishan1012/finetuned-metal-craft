@@ -1,32 +1,12 @@
+import { API_ENDPOINTS, Quote } from '@/types/Types';
 import apiClient from './apiClient';
-
-export interface Order {
-  id: string;
-  customerName: string;
-  date: string;
-  status: 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
-  total: string;
-  [key: string]: any;
-}
-
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category: string;
-  material?: string;
-  inStock: boolean;
-  [key: string]: any;
-}
 
 // Order API calls
 export const orderAPI = {
   // Fetch all orders
   getOrders: async () => {
     try {
-      const response = await apiClient.get('/orders');
+      const response = await apiClient.get(API_ENDPOINTS.orders.list);
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch orders:', error);
@@ -37,7 +17,7 @@ export const orderAPI = {
   // Fetch single order by ID
   getOrderById: async (id: string) => {
     try {
-      const response = await apiClient.get(`/orders/${id}`);
+      const response = await apiClient.get(API_ENDPOINTS.orders.detail(id));
       return response.data.data;
     } catch (error) {
       console.error(`Failed to fetch order ${id}:`, error);
@@ -48,7 +28,7 @@ export const orderAPI = {
   // Update order status
   updateOrderStatus: async (id: string, status: string) => {
     try {
-      const response = await apiClient.patch(`/orders/${id}/status`, { status });
+      const response = await apiClient.patch(API_ENDPOINTS.orders.updateStatus(id));
       return response.data.data;
     } catch (error) {
       console.error(`Failed to update order ${id}:`, error);
@@ -57,49 +37,85 @@ export const orderAPI = {
   },
 };
 
+export const paymentAPI = {
+  checkout: async (payload: any) => {
+    try {
+      const response = await apiClient.post(API_ENDPOINTS.payments.checkout, payload);
+      // Assuming your backend returns { success: true, order: {...}, dbOrderId: '...' }
+      return response.data;
+    } catch (error) {
+      console.error('Failed to initialize checkout:', error);
+      throw error;
+    }
+  },
+
+  verify: async (payload: any) => {
+    try {
+      const response = await apiClient.post(API_ENDPOINTS.payments.verify, payload);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to verify payment:', error);
+      throw error;
+    }
+  }
+};
+
 // Product API calls
 export const productAPI = {
-  // Fetch all products
   getProducts: async () => {
     try {
-      const response = await apiClient.get('/products');
+      const response = await apiClient.get(API_ENDPOINTS.products.list);
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch products:', error);
       throw error;
     }
   },
-
-  // Create new product
-  createProduct: async (productData: Omit<Product, 'id'>) => {
+  getDigitalProducts: async () => {
     try {
-      const response = await apiClient.post('/products', productData);
-      return response.data.data;
+      const response = await apiClient.get(API_ENDPOINTS.products.digital.list);
+      return response.data.data || [];
     } catch (error) {
-      console.error('Failed to create product:', error);
+      console.error('Failed to fetch products:', error);
       throw error;
     }
   },
-
-  // Update product
-  updateProduct: async (id: string, productData: Partial<Product>) => {
+  getProductById: async (id: string) => {
     try {
-      const response = await apiClient.put(`/products/${id}`, productData);
-      return response.data.data;
+      const response = await apiClient.get(API_ENDPOINTS.products.detail(id));
+      return response.data.data || [];
     } catch (error) {
-      console.error(`Failed to update product ${id}:`, error);
-      throw error;
-    }
-  },
-
-  // Delete product
-  deleteProduct: async (id: string) => {
-    try {
-      const response = await apiClient.delete(`/products/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Failed to delete product ${id}:`, error);
+      console.error('Failed to fetch products:', error);
       throw error;
     }
   },
 };
+
+// Project API
+export const projectAPI = {
+  // Fetch all projects
+  getProjects: async () => {
+    try {
+      const response = await apiClient.get(API_ENDPOINTS.projects.list);
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Failed to fetch projects:', error);
+      throw error;
+    }
+  },
+};
+
+// Quote API
+export const quoteAPI = {
+  // Create new project
+  createQuote: async (projectData: Omit<Quote, 'id'>) => {
+    try {
+      const response = await apiClient.post(API_ENDPOINTS.quotes.create, projectData);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create project:', error);
+      throw error;
+    }
+  },
+};
+

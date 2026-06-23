@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
-import * as productService from '../services/productService';
-import mongoose from 'mongoose';
+import productService from '../services/productService';
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
@@ -11,12 +10,35 @@ export const getProducts = async (req: Request, res: Response) => {
   }
 };
 
+export const getProductById = async (req: Request, res: Response) => {
+  try {
+    const {id} = req.params;
+    if(!id) {
+      throw new Error("Not received Id of Product");
+    }
+    const products = await productService.getProductById(id as string);
+    res.status(200).json({ success: true, data: products });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch products' });
+  }
+};
+
+export const getDigitalProducts = async (req: Request, res: Response) => {
+  try {
+    const products = await productService.getAllDigitalProducts();
+    res.status(200).json({ success: true, data: products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: 'Failed to fetch digital products', error });
+  }
+};
+
 export const addProduct = async (req: Request, res: Response) => {
   try {
     const newProduct = await productService.createProduct(req.body);
     res.status(201).json({ success: true, data: newProduct });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to create product' });
+    res.status(500).json({ success: false, message: 'Failed to create product', error });
   }
 };
 

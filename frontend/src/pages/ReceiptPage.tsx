@@ -1,17 +1,18 @@
 import React from 'react';
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { CheckCircle, Download, ShoppingBag } from 'lucide-react';
+import { CheckCircle, Download, ShoppingBag, FileDown } from 'lucide-react';
 
 const ReceiptPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Extract the data passed from the handlePayment function
   const transactionDetails = location.state;
 
   if (!transactionDetails) {
     return <Navigate to="/shop" replace />;
   }
+  
+  const digitalItems = transactionDetails.digitalItems || [];
 
   return (
     <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
@@ -26,6 +27,36 @@ const ReceiptPage = () => {
           </p>
         </div>
 
+        {/* Secure Digital Downloads Section */}
+        {digitalItems.length > 0 && (
+          <div className="bg-blue-50 rounded-xl border border-blue-100 p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
+              <FileDown className="mr-2 h-5 w-5" />
+              Your Digital Downloads
+            </h3>
+            <div className="space-y-3">
+              {digitalItems.map((item: any, index: number) => (
+                <div key={index} className="flex items-center justify-between bg-white p-4 rounded-lg border border-blue-100">
+                  <span className="font-medium text-gray-800">{item.name}</span>
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    Download
+                  </a>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-xs text-blue-700">
+              * Please download and save your files. Links may expire.
+            </p>
+          </div>
+        )}
+
+        {/* Transaction Receipt Section */}
         <div className="bg-[#f8f9fa] rounded-xl border border-gray-100 p-6 md:p-8 shadow-sm">
           <h3 className="text-lg font-semibold text-gray-900 mb-6 border-b pb-4">Transaction Receipt</h3>
           
@@ -66,7 +97,7 @@ const ReceiptPage = () => {
             className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition-colors"
           >
             <Download className="mr-2 h-4 w-4" />
-            Download / Print
+            Print Receipt
           </button>
           
           <button

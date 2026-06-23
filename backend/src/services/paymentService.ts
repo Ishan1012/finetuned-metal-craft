@@ -2,9 +2,9 @@ import { razorpayInstance } from '../config/Razorpay';
 import * as orderService from './orderService';
 import * as transactionService from './transactionService';
 import crypto from 'crypto';
+import { decryptUrl } from '../utils/cryptoUtils';
 
 export const createRazorpayOrder = async (orderData: any) => {
-  // Create the order
   const options = {
     amount: orderData.totalAmount * 100,
     currency: "INR",
@@ -21,7 +21,7 @@ export const createRazorpayOrder = async (orderData: any) => {
 
   return {
     razorpayOrder,
-    dbOrderId: newDbOrder._id
+    dbOrderId: newDbOrder._id.toString()
   };
 };
 
@@ -44,7 +44,7 @@ export const verifyRazorpayPayment = async (
   const isAuthentic = expectedSignature === razorpaySignature;
 
   if (isAuthentic) {
-    // successful payment
+    // 1. Record successful transaction
     await transactionService.recordTransaction({
       orderId: dbOrderId,
       razorpayPaymentId,
@@ -54,11 +54,33 @@ export const verifyRazorpayPayment = async (
       status: 'success'
     });
 
+    // 2. Update Order Status
     await orderService.updateOrderStatus(dbOrderId, 'Paid');
-    return true;
+
+    // 3. SECURE URL LOGIC: Fetch populated order details
+    const order = await orderService.findOrderById(dbOrderId);
+    
+    let digitalItems: any[] = [];
+    
+    // Filter out digital items and decrypt their URLs
+    if (order && order.items) {
+      digitalItems = order.items
+        .filter((item: any) => item.product && item.product.isDigital)
+        .map((item: any) => ({
+          id: item.product._id,
+          name: item.product.name,
+          url: item.product.url ? decryptUrl(item.product.url) : null // Decrypting here!
+        }));
+    }
+
+    // Return success along with the secure links
+    return { 
+      success: true, 
+      digitalItems 
+    };
 
   } else {
-    // failed payment
+    // 1. Record failed transaction
     await transactionService.recordTransaction({
       orderId: dbOrderId,
       razorpayPaymentId,
@@ -68,7 +90,10 @@ export const verifyRazorpayPayment = async (
       status: 'failed'
     });
 
+    // 2. Cancel Order
     await orderService.updateOrderStatus(dbOrderId, 'Cancelled');
-    return false;
+    
+    // Return failure
+    return { success: false };
   }
 };

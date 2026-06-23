@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,15 +7,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
-import { 
-  ArrowRight, 
-  PenTool, 
-  Crosshair, 
-  Sparkles, 
+import {
+  PenTool,
+  Crosshair,
+  Sparkles,
   Package,
   CheckCircle2,
   Send
 } from "lucide-react";
+import { Quote, quoteAPI } from "@/lib/api-services";
 
 const processSteps = [
   {
@@ -106,35 +105,73 @@ const finishes = [
 
 export default function YourProject() {
   const { toast } = useToast();
-  const [formData, setFormData] = useState({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<Quote>({
     name: "",
     email: "",
     phone: "",
     location: "",
     projectType: "",
     material: "",
-    dimensions: "",
-    quantity: "",
+    length: 0,
+    width: 0,
+    quantity: 0,
     design: "",
     timeline: "",
-    budget: "",
+    budget: 0,
     details: "",
+    image: "/images/placeholder.png"
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    toast({
-      title: "Quote Request Sent!",
-      description: "We'll get back to you within 24 hours with a detailed quote.",
-    });
-    setFormData({
-      name: "", email: "", phone: "", location: "", projectType: "",
-      material: "", dimensions: "", quantity: "", design: "", timeline: "", budget: "", details: "",
-    });
-    setIsSubmitting(false);
+
+    try {
+      const data = await quoteAPI.createQuote(formData);
+
+      if (data.success) {
+        toast({
+          title: `Quote Request Sent for ${data.name}!`,
+          description: "We'll get back to you within 24 hours with a detailed quote.",
+        });
+      }
+      else {
+        throw new Error(data.message);
+      }
+      setFormData({
+        name: "", email: "", phone: "", location: "", projectType: "",
+        material: "", length: 0, width: 0, quantity: 0, design: "",
+        timeline: "", budget: 0, details: "", image: "/images/placeholder.png"
+      });
+    } catch (error) {
+      toast({ title: "Falied to submit", description: "Some error has occured in submitting the form.", variant: "destructive" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const openCloudinaryWidget = () => {
+    const widget = window.cloudinary.createUploadWidget(
+      {
+        cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+        uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+        sources: ['local', 'url', 'camera'], // What options the user sees
+        multiple: false, // Only one image per product for now
+        maxFiles: 1,
+      },
+      (error: any, result: any) => {
+        if (!error && result && result.event === "success") {
+          console.log("Upload successful! URL: ", result.info.secure_url);
+          // Update the form state with the secure Cloudinary URL
+          if (formData) {
+            setFormData({ ...formData, image: result.info.secure_url });
+          }
+        }
+      }
+    );
+
+    widget.open();
   };
 
   return (
@@ -158,6 +195,221 @@ export default function YourProject() {
               <p className="text-xl text-primary-foreground/80">
                 Made to order. Every detail matters. Let us bring your vision to life.
               </p>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      
+      {/* Quote Form */}
+      <section id="quote" className="section-padding bg-cream">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto">
+            <ScrollReveal animation="fade-up">
+              <div className="text-center mb-12">
+                <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
+                  Request a Quote
+                </p>
+                <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+                  Get Your Custom Quote
+                </h2>
+                <p className="text-muted-foreground">
+                  Fill out the form below and we'll get back to you within 24 hours with a detailed quote.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal animation="fade-up" delay={0.1}>
+              <Card className="bg-card border-border">
+                <CardContent className="p-8">
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Contact Info */}
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="name">Name *</Label>
+                        <Input
+                          id="name"
+                          required
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder="Your name"
+                          className="mt-1.5"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="phone">Phone *</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          required
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder="+91 98765 43210"
+                          className="mt-1.5"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          placeholder="your@email.com"
+                          className="mt-1.5"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="location">Location</Label>
+                        <Input
+                          id="location"
+                          value={formData.location}
+                          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                          placeholder="City, State"
+                          className="mt-1.5"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Project Details */}
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="projectType">Project Type *</Label>
+                        <Input
+                          id="projectType"
+                          required
+                          value={formData.projectType}
+                          onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
+                          placeholder="e.g., Railing, Name Plate, Gate"
+                          className="mt-1.5"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="material">Material Preference</Label>
+                        <Input
+                          id="material"
+                          value={formData.material}
+                          onChange={(e) => setFormData({ ...formData, material: e.target.value })}
+                          placeholder="e.g., Stainless Steel, Brass"
+                          className="mt-1.5"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="design">Design</Label>
+                        <Input
+                          id="design"
+                          required
+                          value={formData.design}
+                          onChange={(e) => setFormData({ ...formData, design: e.target.value })}
+                          placeholder="e.g., Minimalistic, etc"
+                          className="mt-1.5"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="budget">Budget</Label>
+                        <Input
+                          id="budget"
+                          type="number"
+                          value={formData.budget}
+                          onChange={(e) => setFormData({ ...formData, budget: Number(e.target.value) })}
+                          className="mt-1.5"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid sm:grid-cols-3 gap-4">
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="length">Length</Label>
+                          <Input
+                            id="length"
+                            type="number"
+                            value={formData.length}
+                            onChange={(e) => setFormData({ ...formData, length: Number(e.target.value) })}
+                            className="mt-1.5"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="width">Width</Label>
+                          <Input
+                            id="width"
+                            type="number"
+                            value={formData.width}
+                            onChange={(e) => setFormData({ ...formData, width: Number(e.target.value) })}
+                            className="mt-1.5"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="quantity">Quantity</Label>
+                        <Input
+                          id="quantity"
+                          type="number"
+                          value={formData.quantity}
+                          onChange={(e) => setFormData({ ...formData, quantity: Number(e.target.value) })}
+                          placeholder="Number of pieces"
+                          className="mt-1.5"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="timeline">Timeline</Label>
+                        <Input
+                          id="timeline"
+                          value={formData.timeline}
+                          onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
+                          placeholder="When needed"
+                          className="mt-1.5"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="details">Additional Details</Label>
+                      <Textarea
+                        id="details"
+                        rows={4}
+                        value={formData.details}
+                        onChange={(e) => setFormData({ ...formData, details: e.target.value })}
+                        placeholder="Tell us about your project requirements, design preferences, etc."
+                        className="mt-1.5 resize-none"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      {/* Shows a preview of the existing or newly uploaded image */}
+                      {formData.image && (
+                        <img src={formData.image} alt="Preview" className="w-16 h-16 object-cover rounded border border-gray-200 shadow-sm" />
+                      )}
+
+                      <Button
+                        type="button"
+                        className="bg-[#E4A143] hover:bg-[#D29D5B] text-white rounded-xl"
+                        variant="outline"
+                        onClick={openCloudinaryWidget}
+                      >
+                        Upload Image
+                      </Button>
+                    </div>
+
+                    <Button
+                      type="submit"
+                      variant="gold"
+                      size="lg"
+                      className="w-full"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Sending..." : "Submit Quote Request"}
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
             </ScrollReveal>
           </div>
         </div>
@@ -272,7 +524,7 @@ export default function YourProject() {
         </div>
       </section>
 
-      {/* Patterns & Finishes */}
+      {/* Patterns */}
       <section id="patterns" className="section-padding bg-background scroll-mt-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
@@ -323,167 +575,6 @@ export default function YourProject() {
                 ))}
               </StaggerContainer>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Quote Form */}
-      <section className="section-padding bg-cream">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto">
-            <ScrollReveal animation="fade-up">
-              <div className="text-center mb-12">
-                <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
-                  Request a Quote
-                </p>
-                <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-                  Get Your Custom Quote
-                </h2>
-                <p className="text-muted-foreground">
-                  Fill out the form below and we'll get back to you within 24 hours with a detailed quote.
-                </p>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-up" delay={0.1}>
-              <Card className="bg-card border-border">
-                <CardContent className="p-8">
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Contact Info */}
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="name">Name *</Label>
-                        <Input
-                          id="name"
-                          required
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="Your name"
-                          className="mt-1.5"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="phone">Phone *</Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          required
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+91 98765 43210"
-                          className="mt-1.5"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="your@email.com"
-                          className="mt-1.5"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="location">Location</Label>
-                        <Input
-                          id="location"
-                          value={formData.location}
-                          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                          placeholder="City, State"
-                          className="mt-1.5"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Project Details */}
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="projectType">Project Type *</Label>
-                        <Input
-                          id="projectType"
-                          required
-                          value={formData.projectType}
-                          onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                          placeholder="e.g., Railing, Name Plate, Gate"
-                          className="mt-1.5"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="material">Material Preference</Label>
-                        <Input
-                          id="material"
-                          value={formData.material}
-                          onChange={(e) => setFormData({ ...formData, material: e.target.value })}
-                          placeholder="e.g., Stainless Steel, Brass"
-                          className="mt-1.5"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid sm:grid-cols-3 gap-4">
-                      <div>
-                        <Label htmlFor="dimensions">Dimensions</Label>
-                        <Input
-                          id="dimensions"
-                          value={formData.dimensions}
-                          onChange={(e) => setFormData({ ...formData, dimensions: e.target.value })}
-                          placeholder="L × W × H"
-                          className="mt-1.5"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="quantity">Quantity</Label>
-                        <Input
-                          id="quantity"
-                          value={formData.quantity}
-                          onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                          placeholder="Number of pieces"
-                          className="mt-1.5"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="timeline">Timeline</Label>
-                        <Input
-                          id="timeline"
-                          value={formData.timeline}
-                          onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
-                          placeholder="When needed"
-                          className="mt-1.5"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="details">Additional Details</Label>
-                      <Textarea
-                        id="details"
-                        rows={4}
-                        value={formData.details}
-                        onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                        placeholder="Tell us about your project requirements, design preferences, etc."
-                        className="mt-1.5 resize-none"
-                      />
-                    </div>
-
-                    <Button
-                      type="submit"
-                      variant="gold"
-                      size="lg"
-                      className="w-full"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Sending..." : "Submit Quote Request"}
-                      <Send className="h-4 w-4" />
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </ScrollReveal>
           </div>
         </div>
       </section>

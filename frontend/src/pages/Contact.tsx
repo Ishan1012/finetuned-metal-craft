@@ -222,91 +222,18 @@ export default function Contact() {
                   Send Us a Message
                 </h2>
                 <p className="text-muted-foreground mb-8">
-                  Fill out the form below and we'll get back to you within 24 hours 
+                  Click the button below to message us directly on WhatsApp. We'll get back to you within 24 hours
                   with a detailed quote.
                 </p>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="name">Your Name *</Label>
-                      <Input
-                        id="name"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="John Doe"
-                        className="bg-card mt-1.5"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="phone">Phone Number *</Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        required
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        placeholder="+91 98765 43210"
-                        className="bg-card mt-1.5"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="john@example.com"
-                      className="bg-card mt-1.5"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="product">Product Interest</Label>
-                    <Input
-                      id="product"
-                      value={formData.product}
-                      onChange={(e) => setFormData({ ...formData, product: e.target.value })}
-                      placeholder="e.g., Railing, Name Plate, Custom Design"
-                      className="bg-card mt-1.5"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="message">Your Message *</Label>
-                    <Textarea
-                      id="message"
-                      required
-                      rows={5}
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Tell us about your project requirements, dimensions, material preferences, etc."
-                      className="bg-card resize-none mt-1.5"
-                    />
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Button
-                      type="submit"
-                      variant="gold"
-                      size="lg"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Sending..." : "Send Message"}
-                      <Send className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="lg" asChild>
-                      <a href="https://wa.me/919303311384" target="_blank" rel="noopener noreferrer">
-                        <MessageCircle className="h-4 w-4" />
-                        WhatsApp Instead
-                      </a>
-                    </Button>
-                  </div>
-                </form>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button variant="gold" size="lg" asChild>
+                    <a href="https://wa.me/919303311384" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                      <MessageCircle className="h-5 w-5" />
+                      Message us on WhatsApp
+                    </a>
+                  </Button>
+                </div>
               </div>
             </ScrollReveal>
 
@@ -432,9 +359,6 @@ export default function Contact() {
                         {city}
                       </span>
                     ))}
-                    <span className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
-                      + 500 more cities
-                    </span>
                   </div>
                 </CardContent>
               </Card>

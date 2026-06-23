@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { orderAPI, productAPI } from '../../lib/api-services';
+import { Order, orderAPI, productAPI } from '../../lib/api-services';
 import { toast } from 'sonner';
 
 export default function AdminDashboard() {
@@ -25,13 +25,11 @@ export default function AdminDashboard() {
 
       // Calculate statistics
       const totalOrders = orders.length;
-      const totalRevenue = orders.reduce((sum: number, order: any) => {
-        const amount = typeof order.total === 'string' 
-          ? parseFloat(order.total.replace(/[^0-9.-]+/g, ''))
-          : order.total;
+      const totalRevenue = orders.reduce((sum: number, order: Order) => {
+        const amount = order.totalAmount;
         return sum + (amount || 0);
       }, 0);
-      const activeProducts = products.filter((p: any) => p.inStock).length;
+      const activeProducts = products.filter((p: any) => p.status === "In Stock").length;
 
       setStats({
         totalOrders,

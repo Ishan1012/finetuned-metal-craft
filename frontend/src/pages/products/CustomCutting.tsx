@@ -4,6 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const capabilities = [
   "Decorative wall art",
@@ -62,12 +69,32 @@ export default function CustomCutting() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Image */}
             <ScrollReveal animation="fade-right">
-              <div className="space-y-4">
-                {gallery.map((img, i) => (
-                  <div key={i} className="aspect-[4/3] rounded-xl overflow-hidden bg-muted">
-                    <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
-                  </div>
-                ))}
+              <div className="w-full relative px-0 sm:px-2">
+                <Carousel
+                  opts={{
+                    align: "start",
+                    loop: true,
+                  }}
+                  className="w-full group/carousel"
+                >
+                  <CarouselContent className="-ml-2 md:-ml-4">
+                    {gallery.map((img, i) => (
+                      <CarouselItem key={i} className="pl-2 md:pl-4 basis-[95%]">
+                        <div className="aspect-[4/3] rounded-xl overflow-hidden bg-muted group relative cursor-pointer shadow-sm border border-border/50">
+                          <img
+                            src={img.src}
+                            alt={img.alt}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+
+                  {/* Navigation Arrows - Floated inward with better styling */}
+                  <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 h-10 w-10 bg-background/90 hover:bg-background border-none shadow-md backdrop-blur-sm z-10 opacity-0 transition-opacity group-hover/carousel:opacity-100 disabled:opacity-0" />
+                  <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 bg-background/90 hover:bg-background border-none shadow-md backdrop-blur-sm z-10 opacity-0 transition-opacity group-hover/carousel:opacity-100 disabled:opacity-0" />
+                </Carousel>
               </div>
             </ScrollReveal>
 

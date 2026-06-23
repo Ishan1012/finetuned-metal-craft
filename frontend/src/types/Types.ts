@@ -9,6 +9,17 @@ export interface Order {
   [key: string]: any;
 }
 
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+}
+
+export interface ApiErrorResponse {
+  success: false;
+  message: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -20,16 +31,39 @@ export interface Product {
   inStock: boolean;
   [key: string]: any;
 }
+export const categories = ["All", "Railings", "Name Plates", "Gates", "Grills", "Elevation", "Custom"];
+export const materials = ["All", "Stainless Steel", "Mild Steel", "Aluminium", "Brass", "Copper"];
+export const projectTypes = ["All", "Residential", "Commercial", "Corporate"];
 
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
+export type Category = typeof categories[number];
+export type Material = typeof materials[number];
+export type ProjectType = typeof projectTypes[number];
+
+export interface Project {
+  src: string,
+  alt: string,
+  title: string,
+  category: Category,
+  material: Material,
+  projectType: ProjectType,
+  location: string,
 }
 
-export interface ApiErrorResponse {
-  success: false;
-  message: string;
+export interface Quote {
+  name: string,
+  email: string,
+  phone: string,
+  location: string,
+  projectType: string,
+  material: string,
+  length: number,
+  width: number,
+  quantity: number,
+  design: string,
+  timeline: string,
+  budget: number,
+  details: string,
+  image: string
 }
 
 export type ApiOrderResponse = ApiResponse<Order[]> | ApiResponse<Order>;
@@ -63,8 +97,18 @@ export const API_ENDPOINTS = {
   products: {
     list: '/products',
     detail: (id: string) => `/products/${id}`,
+    digital: {
+      list: '/products/digital',
+    },
   },
   payments: {
-    list: '/payments',
+    checkout: '/payments/checkout',
+    verify: '/payments/verify',
   },
+  projects: {
+    list: '/projects'
+  },
+  quotes: {
+    create: '/quotes'
+  }
 };

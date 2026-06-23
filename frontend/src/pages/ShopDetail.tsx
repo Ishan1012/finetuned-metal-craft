@@ -9,6 +9,8 @@ import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
 import { ProductCard } from "@/components/shop/ProductCard";
+import { productAPI } from "@/lib/api-services";
+import { Product } from "@/types/Types";
 
 export default function ShopDetail() {
   const { id } = useParams<{ id: string }>();
@@ -17,18 +19,21 @@ export default function ShopDetail() {
   const { addToCart } = useCart();
   const { toast } = useToast();
   const [isCopied, setIsCopied] = useState(false);
-  const [products, setProducts] = useState<any[]>([]);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [related, setRelated] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(import.meta.env.VITE_API_URL + "/products");
-        const result = await response.json();
+        const result = await productAPI.getProductById(id);
+        const data = await productAPI.getProducts();
+        const data2 = await productAPI.getDigitalProducts();
 
-        if (result.success) {
-          setProducts(result.data);
+        if (result) {
+          setProduct(result);
+          setRelated([ ...data, ...data2 ]);
         }
       } catch (error) {
         console.error("Failed to fetch products:", error);
@@ -39,8 +44,6 @@ export default function ShopDetail() {
 
     fetchProducts();
   }, []);
-
-  const product = products.find((p) => p._id === id || p.id === id);
 
   if (isLoading) {
     return (
@@ -115,12 +118,12 @@ export default function ShopDetail() {
     }
   };
 
-  const relatedProducts = products
+  const relatedProducts = related
     .filter((p) => p._id !== product._id && p.category === product.category)
     .slice(0, 4);
 
   if (relatedProducts.length < 4) {
-    const otherProducts = products
+    const otherProducts = related
       .filter((p) => p._id !== product._id && p.category !== product.category)
       .slice(0, 4 - relatedProducts.length);
     relatedProducts.push(...otherProducts);

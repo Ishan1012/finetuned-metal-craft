@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,29 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollReveal } from "@/components/common/ScrollReveal";
 import { ArrowLeft, CreditCard, ShieldCheck } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
-import { useToast } from "@/hooks/use-toast";
-
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
-
-const loadRazorpayScript = (src: string) => {
-  return new Promise((resolve) => {
-    const script = document.createElement("script");
-    script.src = src;
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
-  });
-};
+import { usePayment } from "@/contexts/PaymentContext";
 
 export default function Checkout() {
   const { items, totalPrice, clearCart } = useCart();
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { isProcessing, processPayment } = usePayment();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -59,168 +41,12 @@ export default function Checkout() {
   };
 
   const handlePayment = async () => {
-    // Validate form
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.address ||
-      !formData.city ||
-      !formData.state ||
-      !formData.pincode
-    ) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all the required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsProcessing(true);
-
-    // Load Razorpay SDK
-    const isScriptLoaded = await loadRazorpayScript("https://checkout.razorpay.com/v1/checkout.js");
-
-    if (!isScriptLoaded) {
-      toast({
-        title: "Connection Error",
-        description: "Razorpay SDK failed to load. Are you online?",
-        variant: "destructive",
-      });
-      setIsProcessing(false);
-      return;
-    }
-
-    try {
-      const orderResponse = await fetch(import.meta.env.VITE_API_URL + "/payments/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customerName: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          shippingAddress: {
-            address: formData.address,
-            city: formData.city,
-            state: formData.state,
-            pinCode: formData.pincode,
-          },
-          items: items.map(item => ({
-            product: item.product._id,
-            quantity: item.quantity,
-            price: item.product.price
-          })),
-          subtotal: totalPrice,
-          shippingFee: import.meta.env.VITE_SHIPPING_FEE || 0,
-          totalAmount: totalPrice,
-        }),
-      });
-
-      const orderData = await orderResponse.json();
-
-      if (!orderData.success) {
-        throw new Error("Failed to create order on the server");
-      }
-
-      const { order, dbOrderId } = orderData;
-
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: order.amount,
-        currency: order.currency,
-        name: "Your E-Commerce Store",
-        description: "Order Checkout",
-        order_id: order.id,
-
-        // 4. Handle successful payment
-        handler: async function (response: any) {
-          try {
-            const verifyResponse = await fetch(import.meta.env.VITE_API_URL + "/payments/verify", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_signature: response.razorpay_signature,
-                dbOrderId: dbOrderId,
-                amount: totalPrice
-              }),
-            });
-
-            const verifyResult = await verifyResponse.json();
-
-            if (verifyResult.success) {
-              toast({
-                title: "Payment Successful!",
-                description: "Thank you for your order. We have received your payment.",
-              });
-              clearCart();
-
-              navigate("/receipt", {
-                state: {
-                  orderId: dbOrderId,
-                  paymentId: response.razorpay_payment_id,
-                  amount: totalPrice,
-                  customerName: formData.name,
-                  email: formData.email,
-                  date: new Date().toLocaleDateString()
-                }
-              });
-            } else {
-              throw new Error("Payment verification failed on server.");
-            }
-          } catch (error) {
-            toast({
-              title: "Verification Error",
-              description: "Payment succeeded but verification failed. Please contact support.",
-              variant: "destructive",
-            });
-          } finally {
-            setIsProcessing(false);
-          }
-        },
-
-        // Auto-fill user details from your existing React state
-        prefill: {
-          name: formData.name,
-          email: formData.email,
-          contact: formData.phone,
-        },
-        theme: {
-          color: "#d4af37", // Matches the 'gold' variant from your buttons
-        },
-      };
-
-      // 5. Open the Razorpay checkout window
-      const paymentObject = new window.Razorpay(options);
-
-      // Handle when user closes the modal or payment fails
-      paymentObject.on("payment.failed", function (response: any) {
-        toast({
-          title: "Payment Failed",
-          description: response.error.description,
-          variant: "destructive",
-        });
-        setIsProcessing(false);
-      });
-
-      // If user closes the window without paying, reset the processing state
-      paymentObject.on("window.closed", function () {
-        setIsProcessing(false);
-      });
-
-      paymentObject.open();
-
-    } catch (error) {
-      console.error("Checkout Error:", error);
-      toast({
-        title: "Checkout Error",
-        description: "Something went wrong while initializing the payment.",
-        variant: "destructive",
-      });
-      setIsProcessing(false);
-    }
+    processPayment({
+      formData,
+      items,
+      totalPrice,
+      clearCart
+    });
   };
 
   if (items.length === 0) {
@@ -352,7 +178,7 @@ export default function Checkout() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {items.map((item) => (
-                    <div key={item.product.id} className="flex gap-4">
+                    <div key={item.product._id} className="flex gap-4">
                       <div className="w-16 h-16 rounded-md overflow-hidden bg-muted shrink-0">
                         <img
                           src={item.product.image}

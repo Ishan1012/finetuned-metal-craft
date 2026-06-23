@@ -22,6 +22,8 @@ import Contact from "./pages/Contact";
 import Gallery from "./pages/Gallery";
 import NotFound from "./pages/NotFound";
 import ReceiptPage from './pages/ReceiptPage';
+import { PaymentProvider } from "./contexts/PaymentContext";
+import DigitalShop from "./pages/DigitalShop";
 
 const queryClient = new QueryClient();
 
@@ -29,32 +31,35 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrowserRouter>
-        <CartProvider>
-          <Toaster />
-          <Sonner />
-          <CartDrawer />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/shop/:id" element={<ShopDetail />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/your-project" element={<YourProject />} />
-            <Route path="/products/railings" element={<Railings />} />
-            <Route path="/products/nameplates" element={<NamePlates />} />
-            <Route path="/products/elevation" element={<Elevation />} />
-            <Route path="/products/gates" element={<Gates />} />
-            <Route path="/products/dividers" element={<Dividers />} />
-            <Route path="/products/custom" element={<CustomCutting />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/receipt" element={<ReceiptPage />} />
+        <PaymentProvider>
+          <CartProvider>
+            <Toaster />
+            <Sonner />
+            <CartDrawer />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/digital/shop" element={<DigitalShop />} />
+              <Route path="/shop/:id" element={<ShopDetail />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/your-project" element={<YourProject />} />
+              <Route path="/products/railings" element={<Railings />} />
+              <Route path="/products/nameplates" element={<NamePlates />} />
+              <Route path="/products/elevation" element={<Elevation />} />
+              <Route path="/products/gates" element={<Gates />} />
+              <Route path="/products/dividers" element={<Dividers />} />
+              <Route path="/products/custom" element={<CustomCutting />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/receipt" element={<ReceiptPage />} />
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </CartProvider>
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </CartProvider>
+        </PaymentProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
