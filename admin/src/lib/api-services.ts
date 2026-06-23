@@ -4,21 +4,53 @@ export interface Order {
   id: string;
   customerName: string;
   date: string;
-  status: 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
-  total: string;
+  status: 'Created' | 'Processing' | 'Paid' | 'Shipped' | 'Delivered' | 'Cancelled';
+  totalAmount: number;
   [key: string]: any;
 }
 
 export interface Product {
-  id: string;
+  _id: string;
   name: string;
-  description: string;
-  price: number;
-  image: string;
   category: string;
+  isDigital: boolean;
+  price: number;
+  status: 'In Stock' | 'Out of Stock';
   material?: string;
-  inStock: boolean;
+  image: string;
+  url?: string;
+  description?: string;
   [key: string]: any;
+}
+
+export const categories = ["All", "Railings", "Name Plates", "Gates", "Grills", "Elevation", "Custom"];
+export const materials = ["All", "Stainless Steel", "Mild Steel", "Aluminium", "Brass", "Copper"];
+export const projectTypes = ["All", "Residential", "Commercial", "Corporate"];
+
+export type Category = typeof categories[number];
+export type Material = typeof materials[number];
+export type ProjectType = typeof projectTypes[number];
+
+export interface Project {
+  _id: string,
+  src: string,
+  alt: string,
+  title: string,
+  category: Category,
+  material: Material,
+  projectType: ProjectType,
+  location: string,
+}
+
+export interface Quote {
+  _id: string,
+  src: string,
+  alt: string,
+  title: string,
+  category: Category,
+  material: Material,
+  projectType: ProjectType,
+  location: string,
 }
 
 // Order API calls
@@ -70,6 +102,16 @@ export const productAPI = {
     }
   },
 
+  getDigitalProducts: async () => {
+    try {
+      const response = await apiClient.get('/products/digital');
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+      throw error;
+    }
+  },
+
   // Create new product
   createProduct: async (productData: Omit<Product, 'id'>) => {
     try {
@@ -99,6 +141,100 @@ export const productAPI = {
       return response.data;
     } catch (error) {
       console.error(`Failed to delete product ${id}:`, error);
+      throw error;
+    }
+  },
+};
+
+// Project API
+export const projectAPI = {
+  // Fetch all projects
+  getProjects: async () => {
+    try {
+      const response = await apiClient.get('/projects');
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Failed to fetch projects:', error);
+      throw error;
+    }
+  },
+
+  // Create new project
+  createProject: async (projectData: Omit<Project, '_id'>) => {
+    try {
+      const response = await apiClient.post('/projects', projectData);
+      return response.data.data;
+    } catch (error) {
+      console.error('Failed to create project:', error);
+      throw error;
+    }
+  },
+
+  // Update project
+  updateProject: async (id: string, projectData: Partial<Project>) => {
+    try {
+      const response = await apiClient.put(`/projects/${id}`, projectData);
+      return response.data.data;
+    } catch (error) {
+      console.error(`Failed to update project ${id}:`, error);
+      throw error;
+    }
+  },
+
+  // Delete project
+  deleteProject: async (id: string) => {
+    try {
+      const response = await apiClient.delete(`/projects/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to delete project ${id}:`, error);
+      throw error;
+    }
+  },
+};
+
+// Quote API
+export const quoteAPI = {
+  // Fetch all quotes
+  getQuotes: async () => {
+    try {
+      const response = await apiClient.get('/quotes');
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Failed to fetch quotes:', error);
+      throw error;
+    }
+  },
+
+  // Create new quote
+  createQuote: async (quoteData: Omit<Quote, '_id'>) => {
+    try {
+      const response = await apiClient.post('/quotes', quoteData);
+      return response.data.data;
+    } catch (error) {
+      console.error('Failed to create quote:', error);
+      throw error;
+    }
+  },
+
+  // Update quote
+  updateQuote: async (id: string, quoteData: Partial<Quote>) => {
+    try {
+      const response = await apiClient.put(`/quotes/${id}`, quoteData);
+      return response.data.data;
+    } catch (error) {
+      console.error(`Failed to update quote ${id}:`, error);
+      throw error;
+    }
+  },
+
+  // Delete quote
+  deleteQuote: async (id: string) => {
+    try {
+      const response = await apiClient.delete(`/quotes/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to delete quote ${id}:`, error);
       throw error;
     }
   },

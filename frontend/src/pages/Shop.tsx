@@ -3,11 +3,14 @@ import { Layout } from "@/components/layout/Layout";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
-import { shopProducts as defaultProducts, categories } from "@/data/products";
-import { Product } from "@/data/types";
+import { shopProducts as defaultProducts } from "@/data/products";
+import { productAPI } from "@/lib/api-services";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Product } from "@/types/Types";
 
 export default function Shop() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
   const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -15,11 +18,10 @@ export default function Shop() {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(import.meta.env.VITE_API_URL + "/products");
-        const result = await response.json();
+        const result = await productAPI.getProducts();
 
-        if (result.success) {
-          setProducts(result.data); // Assuming your backend returns { success: true, data: [...] }
+        if (result) {
+          setProducts(result);
         } else {
           console.error("Failed to fetch products:", result.message);
         }
@@ -33,10 +35,9 @@ export default function Shop() {
     fetchProducts();
   }, []);
 
-  const filteredProducts =
-    selectedCategory === "All"
-      ? products
-      : products.filter((p) => p.category === selectedCategory);
+  const filteredProducts = products.filter((p) =>
+    p.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <Layout>
@@ -44,11 +45,6 @@ export default function Shop() {
         <div className="absolute top-1/4 right-0 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
-            <ScrollReveal animation="fade-up">
-              <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
-                Shop
-              </p>
-            </ScrollReveal>
             <ScrollReveal animation="fade-up" delay={0.1}>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6">
                 Ready-Made Products
@@ -67,17 +63,20 @@ export default function Shop() {
       <section className="section-padding bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal animation="fade-up" className="mb-8">
-            <div className="flex flex-wrap gap-2 justify-center">
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  variant={selectedCategory === category ? "gold" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedCategory(category)}
-                >
-                  {category}
-                </Button>
-              ))}
+            <div className="max-w-md mx-auto flex gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Button variant="gold" type="button">
+                Search
+              </Button>
             </div>
           </ScrollReveal>
 

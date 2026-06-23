@@ -10,6 +10,9 @@ import ManageOrders from "./pages/admin/ManageOrders";
 import NotFound from "./pages/NotFound";
 import VerifyOtp from './pages/admin/VerifyOtp';
 import { Toaster } from 'sonner';
+import ManageProjects from './pages/admin/ManageProjects';
+import ManageQuotes from './pages/admin/ManageQuotes';
+import OrderDetails from './pages/admin/OrderDetails';
 
 function App() {
   return (
@@ -25,6 +28,9 @@ function App() {
               <Route index element={<AdminDashboard />} />
               <Route path="products" element={<ManageProducts />} />
               <Route path="orders" element={<ManageOrders />} />
+              <Route path="order/:id" element={<OrderDetails />} />
+              <Route path="projects" element={<ManageProjects />} />
+              <Route path="quotes" element={<ManageQuotes />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Route>

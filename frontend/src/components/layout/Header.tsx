@@ -15,16 +15,21 @@ const whatWeMake = [
   { name: "Custom Laser Cutting", href: "/products/custom" },
 ];
 
+const shopTypes = [
+  { name: "Ready-Made Products", href: "/shop" },
+  { name: "Digital Products", href: "/digital/shop" },
+];
+
 const yourProject = [
   { name: "Get Started", href: "/your-project" },
-  { name: "Request a Quote", href: "/contact" },
+  { name: "Request a Quote", href: "/your-project#quote" },
   { name: "Materials Guide", href: "/your-project#materials" },
-  { name: "Patterns & Finishes", href: "/your-project#patterns" },
+  { name: "Patterns", href: "/your-project#patterns" },
 ];
 
 const navigation = [
   { name: "What We Make", href: "/products", hasDropdown: true, items: whatWeMake },
-  { name: "Shop", href: "/shop" },
+  { name: "Shop", href: "/shop", hasDropdown: true, items: shopTypes },
   { name: "Your Project", href: "/your-project", hasDropdown: true, items: yourProject },
   { name: "Gallery", href: "/gallery" },
   { name: "About", href: "/about" },

@@ -18,7 +18,7 @@ const steps = [
     icon: Sparkles,
     step: "03",
     title: "Premium Finishing",
-    description: "This is where we shine! Every piece undergoes smoothing, deburring, and quality inspection. No rough edges, no shortcuts.",
+    description: "Each batch or project starts with sample cutting to attain specific parameters for mirror shine finish with smooth deburred edges.",
   },
   {
     icon: Package,

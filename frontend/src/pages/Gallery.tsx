@@ -7,162 +7,39 @@ import { Lightbox, GalleryImage } from "@/components/gallery/Lightbox";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
-
-// Import gallery images
-import railingGeometric1 from "@/assets/gallery/railing-geometric-1.png";
-import railingGeometric2 from "@/assets/gallery/railing-geometric-2.png";
-import railingWoodMetal from "@/assets/gallery/railing-wood-metal.png";
-import elevationOrganic from "@/assets/gallery/elevation-organic.png";
-import elevationFloral from "@/assets/gallery/elevation-floral.png";
-
-// Gallery project data
-const projects = [
-  {
-    id: 1,
-    src: railingGeometric1,
-    alt: "Geometric pattern laser cut staircase railing",
-    title: "Laser Cut Geometric Railing",
-    category: "Railings",
-    material: "Stainless Steel",
-    projectType: "Residential",
-    location: "Bhopal",
-  },
-  {
-    id: 2,
-    src: railingGeometric2,
-    alt: "Modern geometric staircase railing with triangle pattern",
-    title: "Triangle Pattern Staircase",
-    category: "Railings",
-    material: "Stainless Steel",
-    projectType: "Residential",
-    location: "Indore",
-  },
-  {
-    id: 3,
-    src: railingWoodMetal,
-    alt: "Contemporary wood and metal railing design",
-    title: "Wood & Metal Railing",
-    category: "Railings",
-    material: "Mild Steel",
-    projectType: "Residential",
-    location: "Jabalpur",
-  },
-  {
-    id: 4,
-    src: elevationOrganic,
-    alt: "Organic pattern laser cut elevation panel",
-    title: "Organic Pattern Elevation",
-    category: "Elevation",
-    material: "Aluminium",
-    projectType: "Commercial",
-    location: "Delhi",
-  },
-  {
-    id: 5,
-    src: elevationFloral,
-    alt: "Floral geometric elevation panel design",
-    title: "Floral Geometric Elevation",
-    category: "Elevation",
-    material: "Stainless Steel",
-    projectType: "Corporate",
-    location: "Mumbai",
-  },
-  {
-    id: 6,
-    src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
-    alt: "Brass name plate for residence",
-    title: "Premium Brass Name Plate",
-    category: "Name Plates",
-    material: "Brass",
-    projectType: "Residential",
-    location: "Satna",
-  },
-  {
-    id: 7,
-    src: "https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80",
-    alt: "Custom gate design",
-    title: "Ornate Entry Gate",
-    category: "Gates",
-    material: "Mild Steel",
-    projectType: "Residential",
-    location: "Rewa",
-  },
-  {
-    id: 8,
-    src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80",
-    alt: "Corporate name plate signage",
-    title: "Corporate Office Signage",
-    category: "Name Plates",
-    material: "Stainless Steel",
-    projectType: "Corporate",
-    location: "Delhi",
-  },
-  {
-    id: 9,
-    src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80",
-    alt: "Window grill with intricate pattern",
-    title: "Decorative Window Grill",
-    category: "Grills",
-    material: "Mild Steel",
-    projectType: "Residential",
-    location: "Pune",
-  },
-  {
-    id: 10,
-    src: "https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&q=80",
-    alt: "Metal art installation",
-    title: "Custom Laser Cut Art",
-    category: "Custom",
-    material: "Copper",
-    projectType: "Commercial",
-    location: "Bangalore",
-  },
-  {
-    id: 11,
-    src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=800&q=80",
-    alt: "Main entrance gate",
-    title: "Villa Main Gate",
-    category: "Gates",
-    material: "Stainless Steel",
-    projectType: "Residential",
-    location: "Chennai",
-  },
-];
+import { projectAPI } from "@/lib/api-services";
 
 const categories = ["All", "Railings", "Name Plates", "Gates", "Grills", "Elevation", "Custom"];
 const materials = ["All", "Stainless Steel", "Mild Steel", "Aluminium", "Brass", "Copper"];
 const projectTypes = ["All", "Residential", "Commercial", "Corporate"];
 
-const caseStudies = [
-  {
-    title: "Luxury Residential Complex",
-    location: "Jabalpur",
-    description: "Complete railing solution for 24-unit residential complex including staircase, balcony, and terrace railings.",
-    image: railingGeometric1,
-    material: "SS 304, Satin Finish",
-  },
-  {
-    title: "Corporate Office Elevation",
-    location: "Bhopal",
-    description: "Exterior facade with laser-cut panels featuring company logo pattern for 3-story corporate office.",
-    image: elevationOrganic,
-    material: "Aluminium, Powder Coated",
-  },
-  {
-    title: "Hotel Signage Collection",
-    location: "Indore",
-    description: "200+ custom name plates for boutique hotel including room numbers, directional signage, and amenity markers.",
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
-    material: "Brass, Brushed Finish",
-  },
-];
-
 export default function Gallery() {
+  const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedMaterial, setSelectedMaterial] = useState("All");
   const [selectedProjectType, setSelectedProjectType] = useState("All");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setIsLoading(true);
+        const data = await projectAPI.getProjects();
+        
+        setProjects(data);
+      } catch (err) {
+        console.error("Error fetching projects:", err);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const filteredProjects = projects.filter((p) => {
     const categoryMatch = selectedCategory === "All" || p.category === selectedCategory;
@@ -236,7 +113,7 @@ export default function Gallery() {
             </ScrollReveal>
             <ScrollReveal animation="fade-up" delay={0.2}>
               <p className="text-xl text-primary-foreground/80">
-                Explore our completed projects. Each piece showcases our commitment 
+                Explore our completed projects. Each piece showcases our commitment
                 to precision and premium finishing.
               </p>
             </ScrollReveal>
@@ -317,14 +194,28 @@ export default function Gallery() {
       {/* Gallery Grid */}
       <section className="section-padding bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          {filteredProjects.length > 0 ? (
+
+          {/* Handle Loading State */}
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-20 space-y-4">
+              <div className="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-muted-foreground">Loading portfolio...</p>
+            </div>
+          ) : error ? (
+            < div className="text-center py-16">
+              <p className="text-destructive text-lg mb-4">Something went wrong: {error}</p>
+              <Button onClick={() => window.location.reload()} variant="outline">
+                Try Again
+              </Button>
+            </div>
+          ) : filteredProjects.length > 0 ? (
             <>
               <ScrollReveal animation="fade">
                 <p className="text-center text-muted-foreground mb-8">
                   Showing {filteredProjects.length} project{filteredProjects.length !== 1 ? "s" : ""}
                 </p>
               </ScrollReveal>
-              <StaggerContainer 
+              <StaggerContainer
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                 staggerDelay={0.08}
               >
@@ -362,52 +253,6 @@ export default function Gallery() {
         </div>
       </section>
 
-      {/* Featured Case Studies */}
-      <section className="section-padding bg-cream">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollReveal animation="fade-up">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
-                Featured Projects
-              </p>
-              <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-                Recent Case Studies
-              </h2>
-            </div>
-          </ScrollReveal>
-
-          <StaggerContainer className="grid md:grid-cols-3 gap-8">
-            {caseStudies.map((study) => (
-              <StaggerItem key={study.title}>
-                <Card className="bg-card border-border overflow-hidden h-full hover:shadow-lg transition-shadow">
-                  <div className="aspect-video overflow-hidden">
-                    <img
-                      src={study.image}
-                      alt={study.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <CardContent className="p-6">
-                    <p className="text-xs font-semibold text-gold uppercase mb-2">
-                      {study.location}
-                    </p>
-                    <h3 className="text-lg font-bold text-foreground mb-2">
-                      {study.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {study.description}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      <span className="font-semibold">Material:</span> {study.material}
-                    </p>
-                  </CardContent>
-                </Card>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
       {/* Stats Section */}
       <section className="py-16 bg-secondary">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -436,7 +281,7 @@ export default function Gallery() {
               Ready to Start Your Project?
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Let's create something beautiful together. Get a free quote and 
+              Let's create something beautiful together. Get a free quote and
               see your vision come to life.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -470,6 +315,6 @@ export default function Gallery() {
         onNext={nextImage}
         onPrev={prevImage}
       />
-    </Layout>
+    </Layout >
   );
 }

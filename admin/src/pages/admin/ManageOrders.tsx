@@ -3,6 +3,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { useState, useEffect } from "react";
 import { orderAPI, Order } from "../../lib/api-services";
 import { toast } from "sonner";
+import { Button } from "../../components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function ManageOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -26,10 +28,22 @@ export default function ManageOrders() {
     }
   };
 
+  const fetchOrderById = async (id: string) => {
+    try {
+      setLoading(true);
+
+    } catch (error) {
+      console.error('Failed to fetch orders:', error);
+      toast.error('Failed to load orders');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     try {
       setUpdating(orderId);
-      
+
       // Optimistic update - update UI immediately
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
@@ -43,10 +57,10 @@ export default function ManageOrders() {
       toast.success('Order status updated successfully');
     } catch (error) {
       console.error('Failed to update order status:', error);
-      
+
       // Revert the optimistic update on error
       await fetchOrders();
-      
+
       toast.error('Failed to update order status');
     } finally {
       setUpdating(null);
@@ -73,6 +87,7 @@ export default function ManageOrders() {
                 <TableHead>Date</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Total</TableHead>
+                <TableHead>More Details</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -96,6 +111,16 @@ export default function ManageOrders() {
                     </select>
                   </TableCell>
                   <TableCell>₹ {order.totalAmount.toLocaleString()}</TableCell>
+                  <TableCell>
+                    <Link to={`/admin/order/${order._id}`}>
+                      <Button
+                        className="bg-[#E4A143] hover:bg-[#D29D5B] text-white rounded-xl cursor-pointer"
+                        size="sm"
+                      >
+                        View
+                      </Button>
+                    </Link>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

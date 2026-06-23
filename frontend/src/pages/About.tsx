@@ -268,11 +268,18 @@ export default function About() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <ScrollReveal animation="fade-right" className="order-2 lg:order-1">
               <div className="aspect-video rounded-2xl bg-gradient-to-br from-secondary to-muted flex items-center justify-center">
-                <div className="text-center p-8">
-                  <MapPin className="h-16 w-16 mx-auto text-gold mb-4" />
-                  <p className="text-xl font-bold text-foreground">Our Workshop</p>
-                  <p className="text-muted-foreground">5,000+ sq.ft in Satna, MP</p>
-                </div>
+                <div className="relative rounded-xl aspect-video overflow-hidden shadow-lg">
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-auto object-cover"
+                >
+                  <source src="/videos/machine.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
               </div>
             </ScrollReveal>
             <ScrollReveal animation="fade-left" delay={0.2} className="order-1 lg:order-2">
@@ -285,7 +292,7 @@ export default function About() {
                 </h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Our 5,000+ square foot facility in Satna houses advanced CNC laser
+                    Our 40,000+ square foot facility in Satna houses advanced CNC laser
                     cutting machines, precision equipment (accurate to 0.1mm), dedicated
                     finishing workshop, and quality control area.
                   </p>
