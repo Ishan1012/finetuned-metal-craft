@@ -13,7 +13,7 @@ const quoteSchema = new mongoose.Schema({
     design: { type: String, default: "" },
     timeline: { type: String, required: true },
     budget: { type: String, default: "" },
-    details: { type: String, required: true },
+    details: { type: String, required: false },
     image: { type: String, default: "/images/placeholder.png" }
 }, { timestamps: true });
 

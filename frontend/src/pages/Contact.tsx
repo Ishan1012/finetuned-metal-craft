@@ -19,6 +19,8 @@ import {
   Youtube,
   Linkedin,
 } from "lucide-react";
+import { contactAPI } from "@/lib/api-services";
+import { ContactType } from "@/types/Types";
 
 const contactMethods = [
   {
@@ -40,10 +42,10 @@ const contactMethods = [
   {
     icon: Mail,
     title: "Email Us",
-    primary: "info@asdelasercutting.com",
-    secondary: "quotes@asdelasercutting.com",
+    primary: "contact@asdelasercuttings.com",
+    secondary: "",
     description: "Response within 24 hours",
-    action: "mailto:info@asdelasercutting.com",
+    action: "mailto:contact@asdelasercuttings.com",
   },
   {
     icon: MapPin,
@@ -127,35 +129,48 @@ const social = [
 
 export default function Contact() {
   const { toast } = useToast();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactType>({
     name: "",
     email: "",
     phone: "",
-    product: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    toast({
-      title: "Message Sent!",
-      description: "We'll get back to you within 24 hours.",
-    });
-
-    setFormData({ name: "", email: "", phone: "", product: "", message: "" });
-    setIsSubmitting(false);
-  };
+      e.preventDefault();
+      setIsSubmitting(true);
+  
+      try {
+        const data = await contactAPI.createContact(formData);
+  
+        if (data.success) {
+          toast({
+            title: `Quote Request Sent for ${data.name}!`,
+            description: "We'll get back to you within 24 hours with a detailed quote.",
+          });
+        }
+        else {
+          throw new Error(data.message);
+        }
+        setFormData({
+          name: "", email: "", phone: "", message: ""
+        });
+      } catch (error) {
+        toast({ title: "Falied to submit", description: "Some error has occured in submitting the form.", variant: "destructive" });
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
 
   return (
     <Layout>
       {/* Hero Section */}
       <section className="relative py-24 lg:py-32 gradient-hero overflow-hidden">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
+        <div
+          className="absolute inset-0 z-0 bg-[url('/images/contact.jpeg')] bg-cover bg-center bg-no-repeat opacity-30"
+          aria-hidden="true"
+        />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
             <ScrollReveal animation="fade-up" delay={0}>
@@ -222,18 +237,80 @@ export default function Contact() {
                   Send Us a Message
                 </h2>
                 <p className="text-muted-foreground mb-8">
-                  Click the button below to message us directly on WhatsApp. We'll get back to you within 24 hours
+                  Fill out the form below and we'll get back to you within 24 hours 
                   with a detailed quote.
                 </p>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button variant="gold" size="lg" asChild>
-                    <a href="https://wa.me/919303311384" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                      <MessageCircle className="h-5 w-5" />
-                      Message us on WhatsApp
-                    </a>
-                  </Button>
-                </div>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="name">Your Name</Label>
+                      <Input
+                        id="name"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="John Doe"
+                        className="bg-card mt-1.5"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        required
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder="+91 98765 43210"
+                        className="bg-card mt-1.5"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="john@example.com"
+                      className="bg-card mt-1.5"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="message">Your Message</Label>
+                    <Textarea
+                      id="message"
+                      required
+                      rows={5}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      placeholder="Tell us about your project requirements, dimensions, material preferences, etc."
+                      className="bg-card resize-none mt-1.5"
+                    />
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button
+                      type="submit"
+                      variant="gold"
+                      size="lg"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Sending..." : "Send Message"}
+                      <Send className="h-4 w-4" />
+                    </Button>
+                    <Button variant="outline" size="lg" asChild>
+                      <a href="https://wa.me/919303311384" target="_blank" rel="noopener noreferrer">
+                        <MessageCircle className="h-4 w-4" />
+                        WhatsApp Instead
+                      </a>
+                    </Button>
+                  </div>
+                </form>
               </div>
             </ScrollReveal>
 

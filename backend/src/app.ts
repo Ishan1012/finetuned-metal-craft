@@ -6,6 +6,7 @@ import paymentRoutes from "./routes/paymentRoutes";
 import productRoutes from "./routes/productRoutes";
 import projectRoutes from "./routes/projectRoutes";
 import quoteRoutes from "./routes/quoteRoutes";
+import contactRoutes from "./routes/contactRoutes";
 import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
@@ -40,6 +41,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/quotes', quoteRoutes);
+app.use('/api/contact', contactRoutes);
 app.use('/api/auth', authRoutes);
 
 export default app;

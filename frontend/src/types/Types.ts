@@ -66,6 +66,13 @@ export interface Quote {
   image: string
 }
 
+export interface ContactType {
+  name: string,
+  email: string,
+  phone: string,
+  message: string
+}
+
 export type ApiOrderResponse = ApiResponse<Order[]> | ApiResponse<Order>;
 export type ApiProductResponse = ApiResponse<Product[]> | ApiResponse<Product>;
 export type ApiDeleteResponse = ApiResponse<{ message: string }>;
@@ -110,5 +117,8 @@ export const API_ENDPOINTS = {
   },
   quotes: {
     create: '/quotes'
+  },
+  contact: {
+    create: '/contact'
   }
 };

@@ -9,8 +9,8 @@ const quoteRepository = {
         return await Quote.findById(id);
     },
 
-    create: async (projectData: any) => {
-        return await Quote.create(projectData);
+    create: async (quoteData: any) => {
+        return await Quote.create(quoteData);
     },
 
     updateById: async (id: string, updateData: any) => {

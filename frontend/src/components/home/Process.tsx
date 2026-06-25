@@ -1,30 +1,36 @@
-import { PenTool, Crosshair, Sparkles, Package } from "lucide-react";
+import { PenTool, Crosshair, Sparkles, Package, PersonStanding } from "lucide-react";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
 
 const steps = [
   {
     icon: PenTool,
     step: "01",
-    title: "Design",
-    description: "Share your requirements or design. Our team helps refine and optimize for laser cutting if needed.",
+    title: "Review Drawings",
+    description: "Send us your project drawings and requirements.",
   },
   {
     icon: Crosshair,
     step: "02",
-    title: "Precision Cutting",
-    description: "State-of-the-art CNC laser cutting ensures accuracy within 0.1mm. Complex designs executed flawlessly.",
+    title: "Proposals & quotes",
+    description: "Receive design proposals and quotes within 24 hours.",
   },
   {
     icon: Sparkles,
     step: "03",
-    title: "Premium Finishing",
-    description: "Each batch or project starts with sample cutting to attain specific parameters for mirror shine finish with smooth deburred edges.",
+    title: "Confirm production",
+    description: "Once you confirm the plan, we will arrange production immediately.",
   },
   {
     icon: Package,
     step: "04",
-    title: "Delivery",
-    description: "Careful packaging and fast shipping across India. Your piece arrives installation-ready.",
+    title: "End-to-end logistics",
+    description: "We handle all logistics from the factory to the port.",
+  },
+  {
+    icon: PersonStanding,
+    step: "05",
+    title: "Easy on-site installation",
+    description: "Send us your project drawings and requirements.",
   },
 ];
 
@@ -52,7 +58,7 @@ export function Process() {
         </div>
 
         {/* Steps */}
-        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" staggerDelay={0.15}>
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8" staggerDelay={0.15}>
           {steps.map((item, index) => (
             <StaggerItem key={item.title}>
               <div className="relative h-full">

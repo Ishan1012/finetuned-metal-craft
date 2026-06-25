@@ -44,7 +44,10 @@ export default function DigitalShop() {
     return (
         <Layout>
             <section className="relative py-16 lg:py-24 gradient-hero overflow-hidden">
-                <div className="absolute top-1/4 right-0 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
+                <div
+                    className="absolute inset-0 z-0 bg-[url('/images/digital_products.jpeg')] bg-cover bg-center bg-no-repeat opacity-30"
+                    aria-hidden="true"
+                />
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="max-w-3xl">
                         <ScrollReveal animation="fade-up" delay={0.1}>
@@ -67,14 +70,14 @@ export default function DigitalShop() {
                     <ScrollReveal animation="fade-up" className="mb-8">
                         <div className="max-w-md mx-auto flex gap-2">
                             <div className="relative flex-1">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
-                            <Input
-                                type="text"
-                                placeholder="Search products..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10"
-                            />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                                <Input
+                                    type="text"
+                                    placeholder="Search products..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="pl-10"
+                                />
                             </div>
                             <Button variant="gold" type="button">
                                 Search

@@ -7,7 +7,7 @@ import { Menu, X } from "lucide-react";
 export default function AdminLayout() {
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
-  const sidebarLinks = ["Dashboard", "Products", "Orders", "Projects", "Quotes"];
+  const sidebarLinks = ["Dashboard", "Products", "Orders", "Projects", "Quotes", "Contacts"];
 
   const handleLogout = () => {
     logout();

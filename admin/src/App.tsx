@@ -13,6 +13,7 @@ import { Toaster } from 'sonner';
 import ManageProjects from './pages/admin/ManageProjects';
 import ManageQuotes from './pages/admin/ManageQuotes';
 import OrderDetails from './pages/admin/OrderDetails';
+import ManageContacts from './pages/admin/ManageContacts';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Route path="order/:id" element={<OrderDetails />} />
               <Route path="projects" element={<ManageProjects />} />
               <Route path="quotes" element={<ManageQuotes />} />
+              <Route path="contacts" element={<ManageContacts />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Route>

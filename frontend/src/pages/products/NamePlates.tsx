@@ -120,7 +120,7 @@ export default function NamePlates() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative py-14 lg:py-14 overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={'/images/nameplate.jpeg'}

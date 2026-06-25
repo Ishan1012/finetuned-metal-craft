@@ -13,34 +13,43 @@ import {
   Sparkles,
   Package,
   CheckCircle2,
-  Send
+  Send,
+  PersonStanding
 } from "lucide-react";
-import { Quote, quoteAPI } from "@/lib/api-services";
+import { quoteAPI } from "@/lib/api-services";
+import { useLocation } from "react-router-dom";
+import { Quote } from "@/types/Types";
 
 const processSteps = [
   {
     icon: PenTool,
     step: "01",
-    title: "Share Your Vision",
-    description: "Contact us with your project details—dimensions, material preferences, design inspiration, and budget. We're here to guide you.",
+    title: "Review Drawings",
+    description: "Send us your project drawings and requirements.",
   },
   {
     icon: Crosshair,
     step: "02",
-    title: "Design Development",
-    description: "Our team creates custom designs tailored to your specifications. Typically 1-2 weeks. We refine until you're 100% satisfied.",
+    title: "Proposals & quotes",
+    description: "Receive design proposals and quotes within 24 hours.",
   },
   {
     icon: Sparkles,
     step: "03",
-    title: "Production & Finishing",
-    description: "Once approved, we begin precision cutting and our signature 3-step finishing process. Production typically takes 5-7 days.",
+    title: "Confirm production",
+    description: "Once you confirm the plan, we will arrange production immediately.",
   },
   {
     icon: Package,
     step: "04",
-    title: "Delivery",
-    description: "Careful packaging and fast shipping across India. Installation support available in select cities.",
+    title: "End-to-end logistics",
+    description: "We handle all logistics from the factory to the port.",
+  },
+  {
+    icon: PersonStanding,
+    step: "05",
+    title: "Easy on-site installation",
+    description: "Send us your project drawings and requirements.",
   },
 ];
 
@@ -106,6 +115,7 @@ const finishes = [
 export default function YourProject() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const location = useLocation();
   const [formData, setFormData] = useState<Quote>({
     name: "",
     email: "",
@@ -122,6 +132,23 @@ export default function YourProject() {
     details: "",
     image: "/images/placeholder.png"
   });
+
+  useEffect(() => {
+    if (location.hash) {
+      // Remove the '#' to get the exact id
+      const id = location.hash.replace('#', '');
+      const element = document.getElementById(id);
+
+      if (element) {
+        // Small timeout ensures animations/DOM rendering don't block the scroll
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }
+  }, [location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -178,7 +205,10 @@ export default function YourProject() {
     <Layout>
       {/* Hero Section */}
       <section className="relative py-24 lg:py-32 gradient-hero overflow-hidden">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
+        <div
+          className="absolute inset-0 z-0 bg-[url('/images/your_project.jpeg')] bg-cover bg-center bg-no-repeat opacity-30"
+          aria-hidden="true"
+        />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
             <ScrollReveal animation="fade-up">
@@ -200,7 +230,7 @@ export default function YourProject() {
         </div>
       </section>
 
-      
+
       {/* Quote Form */}
       <section id="quote" className="section-padding bg-cream">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -226,7 +256,7 @@ export default function YourProject() {
                     {/* Contact Info */}
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="name">Name *</Label>
+                        <Label htmlFor="name">Name</Label>
                         <Input
                           id="name"
                           required
@@ -237,7 +267,7 @@ export default function YourProject() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="phone">Phone *</Label>
+                        <Label htmlFor="phone">Phone</Label>
                         <Input
                           id="phone"
                           type="tel"
@@ -277,7 +307,7 @@ export default function YourProject() {
                     {/* Project Details */}
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="projectType">Project Type *</Label>
+                        <Label htmlFor="projectType">Project Type</Label>
                         <Input
                           id="projectType"
                           required
@@ -316,8 +346,9 @@ export default function YourProject() {
                         <Input
                           id="budget"
                           type="number"
-                          value={formData.budget}
-                          onChange={(e) => setFormData({ ...formData, budget: Number(e.target.value) })}
+                          value={formData.budget === 0 ? "" : formData.budget}
+                          onChange={(e) => setFormData({ ...formData, budget: e.target.value === "" ? 0 : Number(e.target.value) })}
+                          placeholder="In Rupees"
                           className="mt-1.5"
                         />
                       </div>
@@ -330,8 +361,9 @@ export default function YourProject() {
                           <Input
                             id="length"
                             type="number"
-                            value={formData.length}
-                            onChange={(e) => setFormData({ ...formData, length: Number(e.target.value) })}
+                            value={formData.length === 0 ? "" : formData.length}
+                            onChange={(e) => setFormData({ ...formData, length: e.target.value === "" ? 0 : Number(e.target.value) })}
+                            placeholder="In meters"
                             className="mt-1.5"
                           />
                         </div>
@@ -340,8 +372,9 @@ export default function YourProject() {
                           <Input
                             id="width"
                             type="number"
-                            value={formData.width}
-                            onChange={(e) => setFormData({ ...formData, width: Number(e.target.value) })}
+                            value={formData.width === 0 ? "" : formData.width}
+                            onChange={(e) => setFormData({ ...formData, width: e.target.value === "" ? 0 : Number(e.target.value) })}
+                            placeholder="In meters"
                             className="mt-1.5"
                           />
                         </div>
@@ -351,8 +384,8 @@ export default function YourProject() {
                         <Input
                           id="quantity"
                           type="number"
-                          value={formData.quantity}
-                          onChange={(e) => setFormData({ ...formData, quantity: Number(e.target.value) })}
+                          value={formData.quantity === 0 ? "" : formData.quantity}
+                          onChange={(e) => setFormData({ ...formData, quantity: e.target.value === "" ? 0 : Number(e.target.value) })}
                           placeholder="Number of pieces"
                           className="mt-1.5"
                         />
@@ -370,7 +403,7 @@ export default function YourProject() {
                     </div>
 
                     <div>
-                      <Label htmlFor="details">Additional Details</Label>
+                      <Label htmlFor="details">Additional Details (optional)</Label>
                       <Textarea
                         id="details"
                         rows={4}
@@ -381,20 +414,23 @@ export default function YourProject() {
                       />
                     </div>
 
-                    <div className="flex items-center gap-4">
-                      {/* Shows a preview of the existing or newly uploaded image */}
-                      {formData.image && (
-                        <img src={formData.image} alt="Preview" className="w-16 h-16 object-cover rounded border border-gray-200 shadow-sm" />
-                      )}
+                    <div>
+                      <Label htmlFor="details ">Upload an Image (optional)</Label>
+                      <div className="flex items-center gap-4 mt-3">
+                        {/* Shows a preview of the existing or newly uploaded image */}
+                        {formData.image && (
+                          <img src={formData.image} alt="Preview" className="w-16 h-16 object-cover rounded border border-gray-200 shadow-sm" />
+                        )}
 
-                      <Button
-                        type="button"
-                        className="bg-[#E4A143] hover:bg-[#D29D5B] text-white rounded-xl"
-                        variant="outline"
-                        onClick={openCloudinaryWidget}
-                      >
-                        Upload Image
-                      </Button>
+                        <Button
+                          type="button"
+                          className="bg-[#E4A143] hover:bg-[#D29D5B] text-white rounded-xl"
+                          variant="outline"
+                          onClick={openCloudinaryWidget}
+                        >
+                          Upload Image
+                        </Button>
+                      </div>
                     </div>
 
                     <Button
@@ -432,7 +468,7 @@ export default function YourProject() {
             </div>
           </ScrollReveal>
 
-          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
             {processSteps.map((item) => (
               <StaggerItem key={item.title}>
                 <div className="relative h-full">
@@ -580,7 +616,7 @@ export default function YourProject() {
       </section>
 
       {/* CTA */}
-      <section className="section-padding bg-background">
+      <section className="section-padding bg-cream">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal animation="scale">
             <div className="text-center max-w-2xl mx-auto">

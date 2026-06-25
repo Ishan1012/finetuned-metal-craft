@@ -131,7 +131,7 @@ export function Header() {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-3">
             <CartIcon />
             <Button variant="gold" size="default" asChild>
-              <Link to="/contact">
+              <Link to="/your-project#quote">
                 <Phone className="h-4 w-4" />
                 Get Quote
               </Link>
@@ -213,7 +213,7 @@ export function Header() {
             ))}
             <div className="pt-4">
               <Button variant="gold" size="lg" className="w-full" asChild>
-                <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/your-project#quote" onClick={() => setMobileMenuOpen(false)}>
                   <Phone className="h-4 w-4" />
                   Get Free Quote
                 </Link>

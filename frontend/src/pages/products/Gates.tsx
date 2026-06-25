@@ -27,7 +27,10 @@ export default function Gates() {
     <Layout>
       {/* Hero */}
       <section className="relative py-24 lg:py-32 gradient-hero overflow-hidden">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
+        <div
+          className="absolute inset-0 z-0 bg-[url('/images/gate.jpeg')] bg-cover bg-center bg-no-repeat opacity-30"
+          aria-hidden="true"
+        />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
             <ScrollReveal animation="fade-up">

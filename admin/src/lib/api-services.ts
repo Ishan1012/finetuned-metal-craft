@@ -53,6 +53,13 @@ export interface Quote {
   location: string,
 }
 
+export interface Contact {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+}
+
 // Order API calls
 export const orderAPI = {
   // Fetch all orders
@@ -235,6 +242,53 @@ export const quoteAPI = {
       return response.data;
     } catch (error) {
       console.error(`Failed to delete quote ${id}:`, error);
+      throw error;
+    }
+  },
+};
+
+// Contact API
+export const contactAPI = {
+  // Fetch all contacts
+  getContacts: async () => {
+    try {
+      const response = await apiClient.get('/contact');
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Failed to fetch contacts:', error);
+      throw error;
+    }
+  },
+
+  // Create new contact
+  createContact: async (contactData: Omit<Contact, '_id'>) => {
+    try {
+      const response = await apiClient.post('/contact', contactData);
+      return response.data.data;
+    } catch (error) {
+      console.error('Failed to create contact:', error);
+      throw error;
+    }
+  },
+
+  // Update contact
+  updateContact: async (id: string, contactData: Partial<Contact>) => {
+    try {
+      const response = await apiClient.put(`/contact/${id}`, contactData);
+      return response.data.data;
+    } catch (error) {
+      console.error(`Failed to update contact ${id}:`, error);
+      throw error;
+    }
+  },
+
+  // Delete contact
+  deleteContact: async (id: string) => {
+    try {
+      const response = await apiClient.delete(`/contact/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to delete contact ${id}:`, error);
       throw error;
     }
   },

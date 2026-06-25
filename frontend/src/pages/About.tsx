@@ -73,9 +73,9 @@ export default function About() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative py-24 lg:py-32 gradient-hero overflow-hidden">
+      <section className="relative min-h-[60vh] lg:py-32 gradient-hero overflow-hidden">
         <div
-          className="absolute inset-0 z-0 bg-[url('/images/about.jpeg')] bg-cover bg-center bg-no-repeat opacity-50"
+          className="absolute inset-0 z-0 bg-[url('/images/about.jpeg')] bg-cover bg-center bg-no-repeat -opacity-50"
           aria-hidden="true"
         />
       </section>

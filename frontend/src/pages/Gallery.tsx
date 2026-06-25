@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -8,13 +8,10 @@ import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import { projectAPI } from "@/lib/api-services";
-
-const categories = ["All", "Railings", "Name Plates", "Gates", "Grills", "Elevation", "Custom"];
-const materials = ["All", "Stainless Steel", "Mild Steel", "Aluminium", "Brass", "Copper"];
-const projectTypes = ["All", "Residential", "Commercial", "Corporate"];
+import { Project } from "@/types/Types";
 
 export default function Gallery() {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -40,6 +37,21 @@ export default function Gallery() {
 
     fetchProjects();
   }, []);
+
+  const categories = useMemo(() => {
+    const uniqueCategories = new Set(projects.map(p => p.category).filter(Boolean));
+    return ["All", ...uniqueCategories].slice(0, 6);
+  }, [projects]);
+
+  const materials = useMemo(() => {
+    const uniqueMaterials = new Set(projects.map(p => p.material).filter(Boolean));
+    return ["All", ...uniqueMaterials].slice(0, 5);
+  }, [projects]);
+
+  const projectTypes = useMemo(() => {
+    const uniqueTypes = new Set(projects.map(p => p.projectType).filter(Boolean));
+    return ["All", ...uniqueTypes].slice(0, 5);
+  }, [projects]);
 
   const filteredProjects = projects.filter((p) => {
     const categoryMatch = selectedCategory === "All" || p.category === selectedCategory;
@@ -98,7 +110,10 @@ export default function Gallery() {
     <Layout>
       {/* Hero Section */}
       <section className="relative py-24 lg:py-32 gradient-hero overflow-hidden">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
+        <div
+          className="absolute inset-0 z-0 bg-[url('/images/img11.jpeg')] bg-cover bg-center bg-no-repeat opacity-30"
+          aria-hidden="true"
+        />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
             <ScrollReveal animation="fade-up">
@@ -220,7 +235,7 @@ export default function Gallery() {
                 staggerDelay={0.08}
               >
                 {filteredProjects.map((project, index) => (
-                  <StaggerItem key={project.id}>
+                  <StaggerItem key={index}>
                     <GalleryImage
                       src={project.src}
                       alt={project.alt}

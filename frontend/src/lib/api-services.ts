@@ -1,4 +1,4 @@
-import { API_ENDPOINTS, Quote } from '@/types/Types';
+import { API_ENDPOINTS, ContactType, Quote } from '@/types/Types';
 import apiClient from './apiClient';
 
 // Order API calls
@@ -108,14 +108,27 @@ export const projectAPI = {
 // Quote API
 export const quoteAPI = {
   // Create new project
-  createQuote: async (projectData: Omit<Quote, 'id'>) => {
+  createQuote: async (quoteData: Omit<Quote, 'id'>) => {
     try {
-      const response = await apiClient.post(API_ENDPOINTS.quotes.create, projectData);
+      const response = await apiClient.post(API_ENDPOINTS.quotes.create, quoteData);
       return response.data;
     } catch (error) {
-      console.error('Failed to create project:', error);
+      console.error('Failed to create quote:', error);
       throw error;
     }
   },
 };
 
+// Contact API
+export const contactAPI = {
+  // Create new project
+  createContact: async (contactData: ContactType) => {
+    try {
+      const response = await apiClient.post(API_ENDPOINTS.contact.create, contactData);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create contact:', error);
+      throw error;
+    }
+  },
+};
