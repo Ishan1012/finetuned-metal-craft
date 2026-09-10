@@ -14,7 +14,11 @@ import {
   Package,
   CheckCircle2,
   Send,
-  PersonStanding
+  PersonStanding,
+  Home,
+  Compass,
+  HardHat,
+  Factory
 } from "lucide-react";
 import { quoteAPI } from "@/lib/api-services";
 import { useLocation } from "react-router-dom";
@@ -49,7 +53,7 @@ const processSteps = [
     icon: PersonStanding,
     step: "05",
     title: "Easy on-site installation",
-    description: "Send us your project drawings and requirements.",
+    description: "Dedicated on-site installation support and guidance for a flawless fit.",
   },
 ];
 
@@ -112,9 +116,41 @@ const finishes = [
   { name: "Natural Patina", description: "Allows metal to age naturally. Develops unique character." },
 ];
 
+const clientRoles = [
+  {
+    id: "homeowner",
+    title: "Are You a Homeowner?",
+    subtitle: "Custom name plates, balcony railings, designer gates & home interior screens.",
+    projectType: "Homeowner / Residential",
+    icon: Home,
+  },
+  {
+    id: "architect",
+    title: "Are You an Architect / Designer?",
+    subtitle: "CAD to reality: parametric facades, metal cladding, partitions & bespoke finishes.",
+    projectType: "Architect / Interior Designer",
+    icon: Compass,
+  },
+  {
+    id: "contractor",
+    title: "Are You a Contractor / Builder?",
+    subtitle: "Commercial railings, structural frames, safety grills & scheduled milestone batches.",
+    projectType: "Contractor / Commercial Builder",
+    icon: HardHat,
+  },
+  {
+    id: "wholesaler",
+    title: "Are You a Wholesaler / Fabricator?",
+    subtitle: "High-volume CNC sheet cutting, job work components & competitive B2B rates.",
+    projectType: "Wholesaler / Metal Fabricator",
+    icon: Factory,
+  },
+];
+
 export default function YourProject() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const location = useLocation();
   const [formData, setFormData] = useState<Quote>({
     name: "",
@@ -234,7 +270,7 @@ export default function YourProject() {
       {/* Quote Form */}
       <section id="quote" className="section-padding bg-cream">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <ScrollReveal animation="fade-up">
               <div className="text-center mb-12">
                 <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
@@ -243,16 +279,79 @@ export default function YourProject() {
                 <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
                   Get Your Custom Quote
                 </h2>
-                <p className="text-muted-foreground">
-                  Fill out the form below and we'll get back to you within 24 hours with a detailed quote.
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  Select your profile below for tailored recommendations, or fill out the form directly. We respond within 24 hours.
                 </p>
               </div>
             </ScrollReveal>
 
-            <ScrollReveal animation="fade-up" delay={0.1}>
-              <Card className="bg-card border-border">
-                <CardContent className="p-8">
-                  <form onSubmit={handleSubmit} className="space-y-6">
+            {/* 4 Role-Based Selection Cards */}
+            <ScrollReveal animation="fade-up" delay={0.05}>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+                {clientRoles.map((role) => {
+                  const Icon = role.icon;
+                  const isSelected = selectedRole === role.id;
+                  return (
+                    <Card
+                      key={role.id}
+                      onClick={() => {
+                        setSelectedRole(role.id);
+                        setFormData((prev) => ({ ...prev, projectType: role.projectType }));
+                        document.getElementById("quote-form-card")?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className={`cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-2 ${
+                        isSelected
+                          ? "border-gold bg-gold/5 shadow-md"
+                          : "border-border bg-card hover:border-gold/50"
+                      }`}
+                    >
+                      <CardContent className="p-5 flex flex-col h-full">
+                        <div className={`h-11 w-11 rounded-xl flex items-center justify-center mb-4 transition-colors ${
+                          isSelected ? "bg-gold text-white" : "bg-gold/10 text-gold"
+                        }`}>
+                          <Icon className="h-6 w-6" />
+                        </div>
+                        <h3 className="font-bold text-foreground text-base mb-2">
+                          {role.title}
+                        </h3>
+                        <p className="text-xs text-muted-foreground leading-relaxed flex-1">
+                          {role.subtitle}
+                        </p>
+                        <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
+                          <span className="text-xs font-semibold text-gold">
+                            {isSelected ? "Selected ✓" : "Select Role →"}
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </ScrollReveal>
+
+            <div className="max-w-3xl mx-auto" id="quote-form-card">
+              <ScrollReveal animation="fade-up" delay={0.1}>
+                <Card className="bg-card border-border">
+                  <CardContent className="p-8">
+                    {selectedRole && (
+                      <div className="mb-6 p-3 rounded-lg bg-gold/10 border border-gold/30 flex items-center justify-between">
+                        <span className="text-xs font-medium text-foreground">
+                          Configuring quote for: <strong className="text-gold">{formData.projectType}</strong>
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 text-xs text-muted-foreground hover:text-foreground"
+                          onClick={() => {
+                            setSelectedRole(null);
+                            setFormData((prev) => ({ ...prev, projectType: "" }));
+                          }}
+                        >
+                          Change
+                        </Button>
+                      </div>
+                    )}
+                    <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Contact Info */}
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
@@ -449,7 +548,8 @@ export default function YourProject() {
             </ScrollReveal>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* How It Works */}
       <section className="section-padding bg-background">

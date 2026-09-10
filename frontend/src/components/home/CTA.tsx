@@ -8,10 +8,21 @@ export function CTA() {
     <section className="section-padding bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="scale">
-          <div className="relative rounded-3xl gradient-hero overflow-hidden p-8 sm:p-12 lg:p-16">
+          <div className="relative rounded-3xl gradient-hero overflow-hidden p-8 sm:p-12 lg:p-16 border border-gold/20 shadow-2xl">
+            {/* CNC Perforated Sheet Geometric Pattern Overlay */}
+            <div
+              className="absolute inset-0 opacity-[0.07] pointer-events-none"
+              style={{
+                backgroundImage: `radial-gradient(circle, #d4af37 1.5px, transparent 1.5px), radial-gradient(circle, #d4af37 1px, transparent 1px)`,
+                backgroundSize: '24px 24px',
+                backgroundPosition: '0 0, 12px 12px'
+              }}
+              aria-hidden="true"
+            />
+
             {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gold/5 rounded-full blur-2xl" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gold/15 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gold/10 rounded-full blur-2xl" />
 
             <div className="relative max-w-3xl mx-auto text-center">
               {/* Headline */}

@@ -30,7 +30,7 @@ const steps = [
     icon: PersonStanding,
     step: "05",
     title: "Easy on-site installation",
-    description: "Send us your project drawings and requirements.",
+    description: "Dedicated on-site delivery and professional installation support for a perfect fit.",
   },
 ];
 

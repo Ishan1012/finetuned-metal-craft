@@ -35,12 +35,6 @@ export function OurStory() {
                   cutting specialist.
                 </p>
                 <p>
-                  What sets us apart isn't just our state-of-the-art equipment—it's our commitment
-                  to the <strong className="text-foreground">finishing process that others skip</strong>.
-                  Our signature 3-step finishing ensures every piece leaves our facility smooth,
-                  safe, and installation-ready.
-                </p>
-                <p>
                   The name "Son Daughter" reflects our inclusive family values—everyone's work
                   matters equally, and every project receives the same dedication.
                 </p>

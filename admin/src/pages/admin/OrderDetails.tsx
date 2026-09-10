@@ -90,6 +90,7 @@ export default function OrderDetails() {
             disabled={updating}
             className="border-gray-200 border rounded-md px-3 py-2 text-sm bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#E4A143] disabled:opacity-50"
           >
+            <option value="Created">Created</option>
             <option value="Paid">Paid</option>
             <option value="Processing">Processing</option>
             <option value="Shipped">Shipped</option>
@@ -109,26 +110,47 @@ export default function OrderDetails() {
               <Package className="h-5 w-5 text-[#E4A143]" />
               Order Summary
             </h2>
-            <div className="grid grid-cols-2 gap-y-4 text-sm">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-4 text-sm">
               <div>
                 <p className="text-gray-500">Order ID</p>
-                <p className="font-medium">{order._id}</p>
+                <p className="font-medium font-mono text-xs">{order._id}</p>
               </div>
               <div>
-                <p className="text-gray-500">Razorpay ID</p>
-                <p className="font-medium">{order.razorpayOrderId || 'N/A'}</p>
+                <p className="text-gray-500">Razorpay / Ref ID</p>
+                <p className="font-medium font-mono text-xs">{order.razorpayOrderId || 'N/A'}</p>
               </div>
               <div>
                 <p className="text-gray-500">Order Date</p>
-                <p className="font-medium">{new Date(order.date).toLocaleString()}</p>
+                <p className="font-medium">{order.date ? new Date(order.date).toLocaleDateString() : 'N/A'}</p>
+              </div>
+              <div>
+                <p className="text-gray-500">Payment Method</p>
+                <span className="font-medium uppercase text-xs inline-block px-2 py-0.5 rounded bg-gray-100 text-gray-800">
+                  {order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod === 'bank_transfer' ? 'Bank Transfer' : 'Razorpay'}
+                </span>
+              </div>
+              <div>
+                <p className="text-gray-500">Payment Status</p>
+                <span className={`font-semibold text-xs inline-block px-2 py-0.5 rounded ${
+                  (order.paymentStatus === 'Paid' || order.status === 'Paid') ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                }`}>
+                  {order.paymentStatus || (order.status === 'Paid' ? 'Paid' : 'Pending')}
+                </span>
               </div>
               <div>
                 <p className="text-gray-500">Current Status</p>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
                   {order.status}
                 </span>
               </div>
             </div>
+
+            {order.orderNotes && (
+              <div className="mt-4 pt-4 border-t border-gray-100 bg-amber-50/60 p-3 rounded-xl">
+                <p className="text-xs font-semibold text-amber-900">Customer Order Notes / Instructions:</p>
+                <p className="text-xs text-amber-800 mt-1 italic">{order.orderNotes}</p>
+              </div>
+            )}
           </div>
 
           {/* Items Table Card */}

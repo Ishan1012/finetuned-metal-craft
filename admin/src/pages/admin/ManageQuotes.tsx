@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { useState, useEffect } from "react";
 import { quoteAPI, Quote } from "../../lib/api-services";
 import { toast } from "sonner";
+import { MessageCircle } from "lucide-react";
 
 export default function ManageQuotes() {
     const [quotes, setQuotes] = useState<Quote[]>([]);
@@ -39,6 +40,7 @@ export default function ManageQuotes() {
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead className="whitespace-nowrap">Action</TableHead>
                                 <TableHead className="whitespace-nowrap">Quote ID</TableHead>
                                 <TableHead className="whitespace-nowrap">Name</TableHead>
                                 <TableHead className="whitespace-nowrap">Email</TableHead>
@@ -57,8 +59,26 @@ export default function ManageQuotes() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {quotes.map((quote: any) => (
+                            {quotes.map((quote: any) => {
+                                const cleanPhone = (quote.phone || '').replace(/\D/g, '');
+                                const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+                                const quoteRef = quote._id ? quote._id.slice(-6).toUpperCase() : 'N/A';
+                                const msg = `Hello ${quote.name}, thank you for contacting ASDE Laser Cutting regarding your quote (Ref: #${quoteRef}). We reviewed your request for ${quote.projectType || 'Custom Project'} (${quote.material || 'Metal'}, ${quote.length || 0}m x ${quote.width || 0}m, Qty: ${quote.quantity || 1}). Let's discuss your project details and pricing.`;
+                                const waUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(msg)}`;
+
+                                return (
                                 <TableRow key={quote._id}>
+                                    <TableCell className="whitespace-nowrap">
+                                        <a
+                                            href={waUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium transition-colors shadow-sm"
+                                        >
+                                            <MessageCircle className="h-3.5 w-3.5" />
+                                            WhatsApp
+                                        </a>
+                                    </TableCell>
                                     <TableCell className="font-medium whitespace-nowrap">
                                         {quote._id ? quote._id.slice(-6).toUpperCase() : 'N/A'}
                                     </TableCell>
@@ -109,7 +129,8 @@ export default function ManageQuotes() {
                                         {quote.createdAt ? new Date(quote.createdAt).toLocaleDateString() : 'N/A'}
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                                );
+                            })}
                         </TableBody>
                     </Table>
                 )}

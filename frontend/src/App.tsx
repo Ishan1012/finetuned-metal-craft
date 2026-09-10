@@ -25,6 +25,9 @@ import ReceiptPage from './pages/ReceiptPage';
 import { PaymentProvider } from "./contexts/PaymentContext";
 import DigitalShop from "./pages/DigitalShop";
 
+import Cart from "./pages/Cart";
+import TrackOrder from "./pages/TrackOrder";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -44,6 +47,9 @@ const App = () => (
               <Route path="/shop" element={<Shop />} />
               <Route path="/digital/shop" element={<DigitalShop />} />
               <Route path="/shop/:id" element={<ShopDetail />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/track-order" element={<TrackOrder />} />
+              <Route path="/track" element={<TrackOrder />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/your-project" element={<YourProject />} />
               <Route path="/products/railings" element={<Railings />} />

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import contactService from '../services/contactService';
+import { sendContactInquiryEmail } from '../services/emailService';
 
 export const getContacts = async (req: Request, res: Response) => {
     try {
@@ -30,6 +31,11 @@ export const getContactById = async (req: Request, res: Response) => {
 export const addContact = async (req: Request, res: Response) => {
     try {
         const newContact = await contactService.createContact(req.body);
+        try {
+            await sendContactInquiryEmail(newContact || req.body);
+        } catch (emailErr) {
+            console.warn('Failed to send contact inquiry email:', emailErr);
+        }
         res.status(201).json({ success: true, name: newContact.name });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Failed to create contact' });

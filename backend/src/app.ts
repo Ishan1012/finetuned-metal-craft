@@ -1,6 +1,6 @@
+import 'dotenv/config';
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import orderRoutes from "./routes/orderRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
 import productRoutes from "./routes/productRoutes";
@@ -8,8 +8,6 @@ import projectRoutes from "./routes/projectRoutes";
 import quoteRoutes from "./routes/quoteRoutes";
 import contactRoutes from "./routes/contactRoutes";
 import authRoutes from "./routes/authRoutes";
-
-dotenv.config();
 
 const app: Application = express();
 

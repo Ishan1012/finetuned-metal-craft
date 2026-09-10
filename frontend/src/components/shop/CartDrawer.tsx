@@ -57,14 +57,16 @@ export function CartDrawer() {
               {/* Cart Items */}
               <div className="flex-1 overflow-y-auto px-6 py-4">
                 <div className="space-y-3 mb-4">
-                  {items.map((item) => (
+                  {items.map((item) => {
+                    const prodId = item.product._id || item.product.id;
+                    return (
                     <div
-                      key={item.product.id}
+                      key={prodId}
                       className="flex gap-3 p-3 rounded-lg bg-muted border border-border"
                     >
                       {/* Product Image */}
                       <Link
-                        to={`/shop/${item.product.id}`}
+                        to={`/shop/${prodId}`}
                         onClick={() => setIsCartOpen(false)}
                         className="flex-shrink-0"
                       >
@@ -78,7 +80,7 @@ export function CartDrawer() {
                       {/* Product Info */}
                       <div className="flex-1 min-w-0">
                         <Link 
-                          to={`/shop/${item.product.id}`}
+                          to={`/shop/${prodId}`}
                           onClick={() => setIsCartOpen(false)}
                           className="hover:text-gold transition-colors"
                         >
@@ -99,21 +101,24 @@ export function CartDrawer() {
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 flex-shrink-0"
-                        onClick={() => removeFromCart(item.product.id)}
+                        onClick={() => removeFromCart(prodId)}
                         title="Remove from cart"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 {/* Quantity Adjustment */}
                 <div className="space-y-3 pt-2 border-t border-border">
                   <p className="text-xs text-muted-foreground font-semibold mt-3">Adjust Quantities</p>
-                  {items.map((item) => (
+                  {items.map((item) => {
+                    const prodId = item.product._id || item.product.id;
+                    return (
                     <div
-                      key={`qty-${item.product.id}`}
+                      key={`qty-${prodId}`}
                       className="flex items-center justify-between px-3 py-2 rounded-lg bg-muted/50 border border-border"
                     >
                       <span className="text-xs text-muted-foreground line-clamp-1 flex-1">
@@ -125,7 +130,7 @@ export function CartDrawer() {
                           size="sm"
                           className="h-7 w-7 p-0"
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity - 1)
+                            updateQuantity(prodId, item.quantity - 1)
                           }
                         >
                           <Minus className="h-3 w-3" />
@@ -138,14 +143,15 @@ export function CartDrawer() {
                           size="sm"
                           className="h-7 w-7 p-0"
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity + 1)
+                            updateQuantity(prodId, item.quantity + 1)
                           }
                         >
                           <Plus className="h-3 w-3" />
                         </Button>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
@@ -181,6 +187,15 @@ export function CartDrawer() {
                   </Button>
                   <Button
                     variant="outline"
+                    size="sm"
+                    className="w-full"
+                    asChild
+                    onClick={() => setIsCartOpen(false)}
+                  >
+                    <Link to="/cart">View Full Cart</Link>
+                  </Button>
+                  <Button
+                    variant="ghost"
                     size="sm"
                     className="w-full"
                     onClick={() => setIsCartOpen(false)}

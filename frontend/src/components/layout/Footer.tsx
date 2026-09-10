@@ -13,6 +13,8 @@ const navigation = {
     { name: "About Us", href: "/about" },
     { name: "Our Process", href: "/about" },
     { name: "Gallery", href: "/gallery" },
+    { name: "Track Order", href: "/track-order" },
+    { name: "Shopping Cart", href: "/cart" },
     { name: "Contact", href: "/contact" },
   ],
   social: [

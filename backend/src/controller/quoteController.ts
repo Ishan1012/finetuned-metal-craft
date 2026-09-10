@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import quoteService from '../services/quoteService';
+import { sendQuoteAlertEmail } from '../services/emailService';
 
 export const getQuotes = async (req: Request, res: Response) => {
     try {
@@ -30,7 +31,12 @@ export const getQuoteById = async (req: Request, res: Response) => {
 export const addQuote = async (req: Request, res: Response) => {
     try {
         const newQuote = await quoteService.createQuote(req.body);
-        res.status(201).json({ success: true, name: newQuote.name });
+        try {
+            await sendQuoteAlertEmail(newQuote || req.body);
+        } catch (emailErr) {
+            console.warn('Failed to send quote alert email:', emailErr);
+        }
+        res.status(201).json({ success: true, name: newQuote.name, quoteId: newQuote._id });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Failed to create quote' });
     }
