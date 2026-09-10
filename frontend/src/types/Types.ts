@@ -100,6 +100,8 @@ export const API_ENDPOINTS = {
     list: '/orders',
     detail: (id: string) => `/orders/${id}`,
     updateStatus: (id: string) => `/orders/${id}/status`,
+    checkoutOffline: '/orders/checkout-offline',
+    track: (id: string) => `/orders/track/${id}`,
   },
   products: {
     list: '/products',

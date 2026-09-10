@@ -18,7 +18,9 @@ interface PaymentPayload {
   formData: FormData;
   items: any[];
   totalPrice: number;
+  subtotal?: number;
   clearCart: () => void;
+  orderNotes?: string;
 }
 
 interface PaymentContextType {
@@ -52,7 +54,7 @@ export const PaymentProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const processPayment = async ({ formData, items, totalPrice, clearCart }: PaymentPayload) => {
+  const processPayment = async ({ formData, items, totalPrice, subtotal, clearCart, orderNotes }: PaymentPayload) => {
     // 1. Validate form
     if (!formData.name || !formData.email || !formData.phone || !formData.address || !formData.city || !formData.state || !formData.pincode) {
       toast({ title: "Missing Information", description: "Please fill in all required fields.", variant: "destructive" });
@@ -80,15 +82,17 @@ export const PaymentProvider = ({ children }: { children: ReactNode }) => {
           state: formData.state,
           pinCode: formData.pincode,
         },
-        // Security Polish: Removed 'isDigital'. Let the server figure that out from the product ID!
         items: items.map(item => ({
-          product: item.product._id,
+          product: item.product._id || item.product.id,
+          name: item.product.name,
           quantity: item.quantity,
           price: item.product.price
         })),
-        subtotal: totalPrice,
+        subtotal: subtotal ?? totalPrice,
         shippingFee: import.meta.env.VITE_SHIPPING_FEE || 0,
         totalAmount: totalPrice,
+        paymentMethod: 'razorpay',
+        orderNotes: orderNotes || '',
       };
 
       const orderData = await paymentAPI.checkout(checkoutPayload);
@@ -135,6 +139,7 @@ export const PaymentProvider = ({ children }: { children: ReactNode }) => {
               navigate("/receipt", {
                 state: {
                   orderId: dbOrderId,
+                  paymentMethod: 'razorpay',
                   paymentId: response.razorpay_payment_id,
                   amount: totalPrice,
                   customerName: formData.name,

@@ -12,8 +12,8 @@ export const findAllOrders = async () => {
       const plainOrder = order.toObject();
       return {
         ...plainOrder,
-        date: order.createdAt.toISOString().slice(0, 10),
-        createdAt: undefined
+        date: order.createdAt ? order.createdAt.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
+        createdAt: order.createdAt
       };
     });
   }
@@ -28,12 +28,12 @@ export const findOrderById = async (id: string) => {
   const plainOrder = order.toObject();
   return {
     ...plainOrder,
-    date: order.createdAt.toISOString().slice(0, 10),
-    createdAt: undefined
+    date: order.createdAt ? order.createdAt.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
+    createdAt: order.createdAt
   };
 };
 
-export const createCheckoutOrder = async (orderData: any, razorpayOrderId: string) => {
+export const createCheckoutOrder = async (orderData: any, razorpayOrderId?: string) => {
   const order = await createCheckoutOrderRepo(orderData, razorpayOrderId);
 
   if (!order) return null;
@@ -41,20 +41,20 @@ export const createCheckoutOrder = async (orderData: any, razorpayOrderId: strin
   const plainOrder = order.toObject();
   return {
     ...plainOrder,
-    date: order.createdAt.toISOString().slice(0, 10),
-    createdAt: undefined
+    date: order.createdAt ? order.createdAt.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
+    createdAt: order.createdAt
   };
 };
 
-export const updateOrderStatus = async (id: string, status: string) => {
-  const order = await updateOrderStatusRepo(id, status);
+export const updateOrderStatus = async (id: string, status: string, additionalFields?: Record<string, any>) => {
+  const order = await updateOrderStatusRepo(id, status, additionalFields);
 
   if (!order) return null;
 
   const plainOrder = order.toObject();
   return {
     ...plainOrder,
-    date: order.createdAt.toISOString().slice(0, 10),
-    createdAt: undefined
+    date: order.createdAt ? order.createdAt.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
+    createdAt: order.createdAt
   };
 };

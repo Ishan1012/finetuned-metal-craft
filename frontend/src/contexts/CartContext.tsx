@@ -16,17 +16,25 @@ interface CartContextType {
   totalPrice: number;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
+  couponCode: string | null;
+  discountPercent: number;
+  discountAmount: number;
+  finalPrice: number;
+  applyCoupon: (code: string) => { success: boolean; message: string };
+  removeCoupon: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const CART_STORAGE_KEY = "asde-cart";
+const COUPON_STORAGE_KEY = "asde-coupon";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [couponCode, setCouponCode] = useState<string | null>(null);
 
-  // Load cart from localStorage on mount
+  // Load cart and coupon from localStorage on mount
   useEffect(() => {
     const stored = localStorage.getItem(CART_STORAGE_KEY);
     if (stored) {
@@ -36,6 +44,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem(CART_STORAGE_KEY);
       }
     }
+    const storedCoupon = localStorage.getItem(COUPON_STORAGE_KEY);
+    if (storedCoupon) {
+      setCouponCode(storedCoupon);
+    }
   }, []);
 
   // Save cart to localStorage on change
@@ -43,12 +55,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 
+  // Save coupon
+  useEffect(() => {
+    if (couponCode) {
+      localStorage.setItem(COUPON_STORAGE_KEY, couponCode);
+    } else {
+      localStorage.removeItem(COUPON_STORAGE_KEY);
+    }
+  }, [couponCode]);
+
   const addToCart = (product: Product, quantity = 1) => {
+    const prodId = product._id || product.id;
     setItems((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
+      const existing = prev.find((item) => (item.product._id || item.product.id) === prodId);
       if (existing) {
         return prev.map((item) =>
-          item.product.id === product.id
+          (item.product._id || item.product.id) === prodId
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
@@ -59,7 +81,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const removeFromCart = (productId: string) => {
-    setItems((prev) => prev.filter((item) => item.product.id !== productId));
+    setItems((prev) => prev.filter((item) => (item.product._id || item.product.id) !== productId));
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
@@ -69,13 +91,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
     setItems((prev) =>
       prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
+        (item.product._id || item.product.id) === productId ? { ...item, quantity } : item
       )
     );
   };
 
   const clearCart = () => {
     setItems([]);
+    setCouponCode(null);
   };
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -83,6 +106,51 @@ export function CartProvider({ children }: { children: ReactNode }) {
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
+
+  // Calculate discount based on active coupon
+  let discountPercent = 0;
+  let discountAmount = 0;
+
+  if (couponCode) {
+    const cleanCode = couponCode.trim().toUpperCase();
+    if (cleanCode === "WELCOME10" || cleanCode === "ASDE10") {
+      discountPercent = 10;
+      discountAmount = Math.round(totalPrice * 0.1);
+    } else if (cleanCode === "ASDE15") {
+      discountPercent = 15;
+      discountAmount = Math.round(totalPrice * 0.15);
+    } else if (cleanCode === "FLAT500") {
+      if (totalPrice >= 2000) {
+        discountAmount = 500;
+        discountPercent = Math.round((500 / totalPrice) * 100);
+      }
+    }
+  }
+
+  const finalPrice = Math.max(0, totalPrice - discountAmount);
+
+  const applyCoupon = (code: string) => {
+    const clean = code.trim().toUpperCase();
+    if (clean === "WELCOME10" || clean === "ASDE10") {
+      setCouponCode(clean);
+      return { success: true, message: `Coupon ${clean} applied! 10% discount activated.` };
+    } else if (clean === "ASDE15") {
+      setCouponCode(clean);
+      return { success: true, message: `Coupon ${clean} applied! 15% discount activated.` };
+    } else if (clean === "FLAT500") {
+      if (totalPrice < 2000) {
+        return { success: false, message: "FLAT500 requires a minimum order value of ₹2,000." };
+      }
+      setCouponCode(clean);
+      return { success: true, message: "Coupon FLAT500 applied! ₹500 off your order." };
+    } else {
+      return { success: false, message: "Invalid coupon code. Try WELCOME10 for 10% off." };
+    }
+  };
+
+  const removeCoupon = () => {
+    setCouponCode(null);
+  };
 
   return (
     <CartContext.Provider
@@ -96,6 +164,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         totalPrice,
         isCartOpen,
         setIsCartOpen,
+        couponCode,
+        discountPercent,
+        discountAmount,
+        finalPrice,
+        applyCoupon,
+        removeCoupon,
       }}
     >
       {children}

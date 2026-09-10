@@ -28,10 +28,34 @@ export const orderAPI = {
   // Update order status
   updateOrderStatus: async (id: string, status: string) => {
     try {
-      const response = await apiClient.patch(API_ENDPOINTS.orders.updateStatus(id));
+      const response = await apiClient.patch(API_ENDPOINTS.orders.updateStatus(id), { status });
       return response.data.data;
     } catch (error) {
       console.error(`Failed to update order ${id}:`, error);
+      throw error;
+    }
+  },
+
+  // Place offline order (COD or Bank Transfer)
+  createOfflineOrder: async (payload: any) => {
+    try {
+      const response = await apiClient.post(API_ENDPOINTS.orders.checkoutOffline, payload);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create offline order:', error);
+      throw error;
+    }
+  },
+
+  // Track order by Order ID and optional email
+  trackOrder: async (orderId: string, email?: string) => {
+    try {
+      const endpoint = API_ENDPOINTS.orders.track(orderId);
+      const url = email ? `${endpoint}?email=${encodeURIComponent(email)}` : endpoint;
+      const response = await apiClient.get(url);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to track order ${orderId}:`, error);
       throw error;
     }
   },

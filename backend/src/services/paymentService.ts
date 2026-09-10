@@ -55,7 +55,7 @@ export const verifyRazorpayPayment = async (
     });
 
     // 2. Update Order Status
-    await orderService.updateOrderStatus(dbOrderId, 'Paid');
+    await orderService.updateOrderStatus(dbOrderId, 'Paid', { paymentStatus: 'Paid' });
 
     // 3. SECURE URL LOGIC: Fetch populated order details
     const order = await orderService.findOrderById(dbOrderId);

@@ -72,6 +72,8 @@ export default function ManageOrders() {
               <TableRow>
                 <TableHead>Order ID</TableHead>
                 <TableHead>Customer Name</TableHead>
+                <TableHead>Payment Method</TableHead>
+                <TableHead>Payment Status</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Total</TableHead>
@@ -79,11 +81,38 @@ export default function ManageOrders() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
+              {orders.map((order) => {
+                const displayId = order.razorpayOrderId
+                  ? order.razorpayOrderId.slice(-6).toUpperCase()
+                  : order._id
+                  ? order._id.slice(-6).toUpperCase()
+                  : 'N/A';
+
+                const payMethodLabel = order.paymentMethod === 'cod'
+                  ? 'COD'
+                  : order.paymentMethod === 'bank_transfer'
+                  ? 'Bank Transfer'
+                  : 'Razorpay';
+
+                const payStatus = order.paymentStatus || (order.status === 'Paid' ? 'Paid' : 'Pending');
+
+                return (
                 <TableRow key={order._id}>
-                  <TableCell>{order.razorpayOrderId.slice(6)}</TableCell>
-                  <TableCell>{order.customerName}</TableCell>
-                  <TableCell>{order.date.slice(0, 10)}</TableCell>
+                  <TableCell className="font-mono text-xs font-semibold">{displayId}</TableCell>
+                  <TableCell className="font-medium">{order.customerName}</TableCell>
+                  <TableCell>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800">
+                      {payMethodLabel}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${
+                      payStatus === 'Paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                    }`}>
+                      {payStatus}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-gray-600 text-xs">{order.date ? order.date.slice(0, 10) : 'N/A'}</TableCell>
                   <TableCell>
                     <select
                       value={order.status}
@@ -91,6 +120,7 @@ export default function ManageOrders() {
                       disabled={updating === order._id}
                       className="border-gray-200 border rounded-md px-2 py-1 text-sm bg-transparent hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
+                      <option value="Created">Created</option>
                       <option value="Paid">Paid</option>
                       <option value="Processing">Processing</option>
                       <option value="Shipped">Shipped</option>
@@ -98,7 +128,7 @@ export default function ManageOrders() {
                       <option value="Cancelled">Cancelled</option>
                     </select>
                   </TableCell>
-                  <TableCell>₹ {order.totalAmount.toLocaleString()}</TableCell>
+                  <TableCell className="font-semibold">₹ {order.totalAmount?.toLocaleString()}</TableCell>
                   <TableCell>
                     <Link to={`/admin/order/${order._id}`}>
                       <Button
@@ -110,7 +140,8 @@ export default function ManageOrders() {
                     </Link>
                   </TableCell>
                 </TableRow>
-              ))}
+                );
+              })}
             </TableBody>
           </Table>
         )}

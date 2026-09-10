@@ -55,7 +55,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {formatPrice(product.price)}
           </span>
           <div className="flex items-center gap-2">
-            <Link to={`/shop/${product._id}`}>
+            <Link to={`/shop/${product._id || product.id}`}>
               <Button
                 variant="outline"
                 size="sm"

@@ -1,6 +1,8 @@
 // src/controller/paymentController.ts
 import { Request, Response } from 'express';
 import * as paymentService from '../services/paymentService';
+import * as orderService from '../services/orderService';
+import * as emailService from '../services/emailService';
 
 export const checkout = async (req: Request, res: Response) => {
   try {
@@ -31,6 +33,15 @@ export const paymentVerification = async (req: Request, res: Response) => {
     );
 
     if (result.success) {
+      try {
+        const order = await orderService.findOrderById(dbOrderId);
+        if (order) {
+          await emailService.sendOrderConfirmationEmails(order);
+        }
+      } catch (emailErr) {
+        console.warn("Failed to send order confirmation email:", emailErr);
+      }
+
       res.status(200).json({ 
         success: true, 
         message: "Payment verified successfully", 
