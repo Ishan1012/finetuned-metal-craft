@@ -27,6 +27,7 @@ import DigitalShop from "./pages/DigitalShop";
 
 import Cart from "./pages/Cart";
 import TrackOrder from "./pages/TrackOrder";
+import { ScrollToTop } from "./components/common/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <PaymentProvider>
           <CartProvider>
             <Toaster />
