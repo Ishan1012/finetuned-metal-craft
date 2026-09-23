@@ -1,0 +1,65 @@
+services:
+  # ==========================================
+  # Backend API Service (Node.js/Express)
+  # ==========================================
+  backend:
+    image: ${DOCKERHUB_USERNAME:-asdelaser}/asde-backend:latest
+    container_name: asde-backend
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    networks:
+      - asde-network
+    # Resource limits to prevent OOM on AWS EC2 t3.micro (1GB RAM)
+    deploy:
+      resources:
+        limits:
+          memory: 450M
+        reservations:
+          memory: 150M
+
+  # ==========================================
+  # Frontend Website (React / Nginx)
+  # ==========================================
+  frontend:
+    image: ${DOCKERHUB_USERNAME:-asdelaser}/asde-frontend:latest
+    container_name: asde-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - asde-network
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 50M
+
+  # ==========================================
+  # Admin Portal (React / Nginx)
+  # ==========================================
+  admin:
+    image: ${DOCKERHUB_USERNAME:-asdelaser}/asde-admin:latest
+    container_name: asde-admin
+    restart: always
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - asde-network
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 50M
+
+networks:
+  asde-network:
+    driver: bridge
