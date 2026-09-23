@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
+import apiClient from "@/lib/apiClient";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -14,44 +15,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [tempToken, setTempToken] = useState<string | null>(null);
 
   const login = async (email: string, password: string) => {
-    const response = await fetch(import.meta.env.VITE_API_URL + '/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!response.ok) throw new Error("Login failed");
-
-    const data = await response.json();
-    if (data.requires2FA) {
-      setTempToken(data.tempToken);
-      return { requires2FA: true };
-    }
-    else {
-      localStorage.setItem("token", data.token);
-      setIsAuthenticated(true);
-      setTempToken(null);
-      return { requires2FA: false };
+    try {
+      const response = await apiClient.post('/auth/login', { email, password });
+      const data = response.data;
+      if (data.requires2FA) {
+        setTempToken(data.tempToken);
+        return { requires2FA: true };
+      } else {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("adminToken", data.token);
+        setIsAuthenticated(true);
+        setTempToken(null);
+        return { requires2FA: false };
+      }
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || "Login failed");
     }
   };
 
   const verifyOtp = async (otp: string) => {
-    const response = await fetch(import.meta.env.VITE_API_URL + '/auth/verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ otp, tempToken }),
-    });
-
-    if (!response.ok) throw new Error("Invalid OTP");
-
-    const data = await response.json();
-    localStorage.setItem("token", data.token); // Store permanent token
-    setIsAuthenticated(true);
-    setTempToken(null);
+    try {
+      const response = await apiClient.post('/auth/verify', { otp, tempToken });
+      const data = response.data;
+      localStorage.setItem("token", data.token); // Store permanent token
+      localStorage.setItem("adminToken", data.token);
+      setIsAuthenticated(true);
+      setTempToken(null);
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || "Invalid OTP");
+    }
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("adminToken");
     setIsAuthenticated(false);
   };
 
