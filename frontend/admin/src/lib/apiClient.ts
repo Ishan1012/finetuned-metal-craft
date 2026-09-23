@@ -39,7 +39,7 @@ apiClient.interceptors.response.use(
       // Clear token and redirect to login
       localStorage.removeItem('token');
       localStorage.removeItem('adminToken');
-      window.location.href = '/admin/login';
+      window.location.href = '/';
     }
     return Promise.reject(error);
   }
