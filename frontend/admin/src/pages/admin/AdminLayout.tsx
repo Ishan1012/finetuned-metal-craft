@@ -1,17 +1,18 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { Button } from "../../components/ui/button";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 
 export default function AdminLayout() {
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
+  const navigate = useNavigate();
   const sidebarLinks = ["Dashboard", "Products", "Orders", "Projects", "Quotes", "Contacts"];
 
   const handleLogout = () => {
     logout();
-    window.location.href = import.meta.env.VITE_SHOP_URL || "/";
+    navigate("/", { replace: true });
   };
 
   return (
@@ -47,8 +48,13 @@ export default function AdminLayout() {
           ))}
         </nav>
         <div className="p-4 border-t border-[#F3E5D5]">
-          <Button variant="ghost" className="w-full text-md py-5 text-white bg-[#E4A143] hover:bg-[#FFF] hover:text-[#E4A143] hover:border hover:border-[#E4A143] cursor-pointer rounded-xl" onClick={handleLogout}>
-            Back to Store
+          <Button
+            variant="ghost"
+            className="w-full text-md py-5 text-white bg-[#E4A143] hover:bg-[#d89333] hover:text-white cursor-pointer rounded-xl flex items-center justify-center gap-2 font-semibold shadow-sm transition-all"
+            onClick={handleLogout}
+          >
+            <LogOut className="h-5 w-5" />
+            Logout
           </Button>
         </div>
       </aside>
