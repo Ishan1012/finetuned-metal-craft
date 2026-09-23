@@ -7,6 +7,8 @@
     "start": "node dist/server.js",
     "build": "tsc",
     "dev": "concurrently \"tsc --watch\" \"nodemon\"",
+    "seed": "ts-node scripts/seedAdmin.ts",
+    "reset-password": "ts-node scripts/resetPassword.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
