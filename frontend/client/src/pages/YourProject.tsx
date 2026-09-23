@@ -21,7 +21,7 @@ import {
   Factory
 } from "lucide-react";
 import { quoteAPI } from "@/lib/api-services";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Quote } from "@/types/Types";
 
 const processSteps = [
@@ -149,6 +149,7 @@ const clientRoles = [
 
 export default function YourProject() {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const location = useLocation();
@@ -194,13 +195,17 @@ export default function YourProject() {
       const data = await quoteAPI.createQuote(formData);
 
       if (data.success) {
+        const quoteId = data.quoteId || (data.quote && data.quote._id);
         toast({
           title: `Quote Request Sent for ${data.name}!`,
-          description: "We'll get back to you within 24 hours with a detailed quote.",
+          description: "Redirecting to your live quote tracking page...",
         });
-      }
-      else {
-        throw new Error(data.message);
+        if (quoteId) {
+          navigate(`/track-order?id=${quoteId}&email=${encodeURIComponent(formData.email)}&type=quote&new=true`);
+          return;
+        }
+      } else {
+        throw new Error(data.message || "Failed to submit quote request");
       }
       setFormData({
         name: "", email: "", phone: "", location: "", projectType: "",
@@ -208,7 +213,7 @@ export default function YourProject() {
         timeline: "", budget: 0, details: "", image: "/images/placeholder.png"
       });
     } catch (error) {
-      toast({ title: "Falied to submit", description: "Some error has occured in submitting the form.", variant: "destructive" });
+      toast({ title: "Failed to submit", description: "Some error has occurred in submitting the form.", variant: "destructive" });
     } finally {
       setIsSubmitting(false);
     }

@@ -14,17 +14,22 @@ export const formatPhoneForWhatsApp = (phone: string): string => {
 
 export const sendEmail = async (to: string, subject: string, text: string, html: string) => {
   try {
-    const sender = process.env.SMTP_USER || 'info@asdelaser.com';
-    await transporter.sendMail({
+    if (!to || !to.includes('@')) {
+      console.warn(`[EmailService] Invalid recipient email: "${to}". Skipping email dispatch.`);
+      return;
+    }
+    const sender = process.env.SMTP_FROM || process.env.SMTP_USER || 'memomate702@gmail.com';
+    const info = await transporter.sendMail({
       from: `"ASDE Laser Cutting" <${sender}>`,
       to,
       subject,
       text,
       html,
     });
-    console.log(`[EmailService] Email sent successfully to ${to} | Subject: "${subject}"`);
+    console.log(`[EmailService] Email sent successfully to ${to} | MessageId: ${info?.messageId} | Subject: "${subject}"`);
+    return info;
   } catch (error) {
-    console.warn(`[EmailService] Notice: Could not send email to ${to}:`, error instanceof Error ? error.message : error);
+    console.error(`[EmailService] Failed to send email to ${to}:`, error instanceof Error ? error.message : error);
   }
 };
 
@@ -229,25 +234,145 @@ export const sendOrderStatusUpdateEmail = async (order: any, newStatus: string) 
   );
 };
 
-export const sendQuoteAlertEmail = async (quote: any) => {
-  const adminEmail = getAdminEmail();
-  const waPhone = formatPhoneForWhatsApp(quote.phone || '');
+export const sendQuoteStatusUpdateEmail = async (quote: any, newStatus: string) => {
+  const shortId = quote._id ? quote._id.toString().slice(-6).toUpperCase() : 'N/A';
+  const fullQuoteId = quote._id ? quote._id.toString() : shortId;
+  const rawFrontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',')[0] : 'https://asdelaser.vercel.app';
+  const frontendUrl = (rawFrontendUrl || 'https://asdelaser.vercel.app').trim();
+  const trackingUrl = `${frontendUrl}/track-order?id=${fullQuoteId}&type=quote`;
+
+  const statusColors: Record<string, string> = {
+    Submitted: '#3b82f6',
+    'Under Review': '#f59e0b',
+    Estimated: '#8b5cf6',
+    Approved: '#16a34a',
+    Cancelled: '#ef4444'
+  };
+  const color = statusColors[newStatus] || '#0f172a';
 
   const html = `
     <div style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Arial, sans-serif; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
       ${brandHeader}
       <div style="padding: 24px;">
+        <h2 style="color: #0f172a; margin-top: 0;">Quote Request #${shortId} Status Update</h2>
+        <p style="color: #475569; font-size: 14px; line-height: 1.5;">
+          Dear <strong>${quote.name}</strong>,<br/>
+          There is an update on your custom laser cutting quote request for <strong>${quote.projectType || 'Custom Project'}</strong>.
+        </p>
+
+        <div style="text-align: center; padding: 20px; background-color: #f8fafc; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 0 0 6px 0; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">Current Quote Status</p>
+          <span style="display: inline-block; font-size: 18px; font-weight: 700; color: #ffffff; background-color: ${color}; padding: 8px 24px; border-radius: 20px; margin-bottom: 12px;">
+            ${newStatus}
+          </span>
+          <div>
+            <a href="${trackingUrl}" style="background-color: #d97706; color: #ffffff; text-decoration: none; padding: 8px 20px; border-radius: 6px; font-size: 12px; font-weight: 600; display: inline-block;">
+              View Live Tracker →
+            </a>
+          </div>
+        </div>
+
+        <p style="font-size: 13px; color: #475569; line-height: 1.5;">
+          If you have questions or want to discuss immediate production schedules, chat directly with our team on WhatsApp at <strong>+91 93033 11384</strong>.
+        </p>
+      </div>
+      ${brandFooter}
+    </div>
+  `;
+
+  await sendEmail(
+    quote.email,
+    `Quote #${shortId} Status Update: ${newStatus} - ASDE Laser Cutting`,
+    `Your quote #${shortId} status is now: ${newStatus}. Track online at: ${trackingUrl}`,
+    html
+  );
+};
+
+export const sendQuoteAlertEmail = async (quote: any) => {
+  const adminEmail = getAdminEmail();
+  const waPhone = formatPhoneForWhatsApp(quote.phone || '');
+  const shortId = quote._id ? quote._id.toString().slice(-6).toUpperCase() : 'N/A';
+  const fullQuoteId = quote._id ? quote._id.toString() : shortId;
+  const rawFrontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',')[0] : 'https://asdelaser.vercel.app';
+  const frontendUrl = (rawFrontendUrl || 'https://asdelaser.vercel.app').trim();
+  const trackingUrl = `${frontendUrl}/track-order?id=${fullQuoteId}&type=quote`;
+
+  // 1. Customer Confirmation Email with Tracking ID
+  const customerHtml = `
+    <div style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Arial, sans-serif; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+      ${brandHeader}
+      <div style="padding: 24px;">
+        <h2 style="color: #0f172a; margin-top: 0;">Quote Request Received #${shortId}</h2>
+        <p style="color: #475569; font-size: 14px; line-height: 1.5;">
+          Dear <strong>${quote.name}</strong>,<br/>
+          Thank you for requesting a custom laser cutting quote with <strong>ASDE Laser Cutting</strong>! We have received your project specifications and our engineering team is analyzing your dimensions and material requirements.
+        </p>
+
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin: 20px 0; text-align: center;">
+          <p style="margin: 0 0 6px 0; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Your Quote Tracking ID</p>
+          <div style="font-family: monospace; font-size: 18px; font-weight: 700; color: #b45309; letter-spacing: 1px; background: #ffffff; border: 1px dashed #d97706; padding: 10px 16px; border-radius: 6px; display: inline-block; margin-bottom: 12px;">
+            ${fullQuoteId}
+          </div>
+          <div>
+            <a href="${trackingUrl}" style="background-color: #d97706; color: #ffffff; text-decoration: none; padding: 10px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; display: inline-block;">
+              Track Quote Status Online →
+            </a>
+          </div>
+          <p style="margin: 8px 0 0 0; font-size: 11px; color: #94a3b8;">Use this Tracking ID anytime on our website to see real-time updates.</p>
+        </div>
+
+        <h3 style="color: #0f172a; font-size: 15px; margin: 20px 0 8px 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;">Submitted Specifications</h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+          <tr style="background-color: #f8fafc;"><td style="padding: 8px; font-weight: 600; width: 40%; color: #475569;">Project Category</td><td style="padding: 8px; color: #0f172a;">${quote.projectType || 'Custom Fabrication'}</td></tr>
+          <tr><td style="padding: 8px; font-weight: 600; color: #475569;">Material Preference</td><td style="padding: 8px; color: #0f172a;">${quote.material || 'Metal'}</td></tr>
+          <tr style="background-color: #f8fafc;"><td style="padding: 8px; font-weight: 600; color: #475569;">Dimensions (LxW)</td><td style="padding: 8px; color: #0f172a;">${quote.length || 0}m × ${quote.width || 0}m</td></tr>
+          <tr><td style="padding: 8px; font-weight: 600; color: #475569;">Quantity</td><td style="padding: 8px; color: #0f172a;">${quote.quantity || 1} units</td></tr>
+          <tr style="background-color: #f8fafc;"><td style="padding: 8px; font-weight: 600; color: #475569;">Timeline</td><td style="padding: 8px; color: #0f172a;">${quote.timeline || 'Flexible'}</td></tr>
+          <tr><td style="padding: 8px; font-weight: 600; color: #475569;">Budget Range</td><td style="padding: 8px; color: #0f172a;">${quote.budget ? '₹' + quote.budget : 'Under Engineering Estimation'}</td></tr>
+          ${quote.design ? `<tr style="background-color: #f8fafc;"><td style="padding: 8px; font-weight: 600; color: #475569;">Design Style</td><td style="padding: 8px; color: #0f172a;">${quote.design}</td></tr>` : ''}
+        </table>
+
+        ${quote.details ? `
+          <div style="margin-top: 16px; padding: 12px; background-color: #f8fafc; border-radius: 6px;">
+            <strong style="font-size: 13px; color: #1e293b;">Additional Notes:</strong>
+            <p style="margin: 4px 0 0 0; font-size: 13px; color: #475569;">${quote.details}</p>
+          </div>
+        ` : ''}
+
+        ${quote.image && quote.image !== '/images/placeholder.png' ? `
+          <div style="margin-top: 16px; text-align: center;">
+            <a href="${quote.image}" target="_blank" style="color: #2563eb; font-size: 13px; text-decoration: underline;">
+              View Uploaded Design Drawing / CAD File
+            </a>
+          </div>
+        ` : ''}
+
+        <div style="margin-top: 24px; padding: 14px; background-color: #eff6ff; border-radius: 6px; font-size: 13px; color: #1e40af; border-left: 4px solid #3b82f6;">
+          <strong>What happens next?</strong><br/>
+          Our CAD/CAM engineers are calculating sheet nesting, laser cutting time, and surface finishing requirements. We will send you an official quote within 24 hours.
+        </div>
+      </div>
+      ${brandFooter}
+    </div>
+  `;
+
+  // 2. Alert Email to Admin
+  const adminHtml = `
+    <div style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Arial, sans-serif; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+      ${brandHeader}
+      <div style="padding: 24px;">
         <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 6px; padding: 12px; margin-bottom: 16px;">
-          <h2 style="color: #854d0e; margin: 0; font-size: 18px;">📋 New Custom Quote Request</h2>
+          <h2 style="color: #854d0e; margin: 0; font-size: 18px;">📋 New Custom Quote Request #${shortId}</h2>
           <p style="margin: 4px 0 0 0; font-size: 13px; color: #a16207;">From: <strong>${quote.name}</strong> (${quote.location || 'Location Not Specified'})</p>
         </div>
 
         <h3 style="color: #0f172a; font-size: 15px; margin: 16px 0 8px 0;">Customer Contact</h3>
         <p style="font-size: 13px; color: #334155; line-height: 1.5; margin: 0;">
           <strong>Name:</strong> ${quote.name}<br/>
-          <strong>Phone:</strong> <a href="tel:${quote.phone}">${quote.phone}</a> | <a href="https://wa.me/${waPhone}?text=Hello%20${encodeURIComponent(quote.name)},%20thank%20you%20for%20your%20custom%20quote%20request%20with%20ASDE%20Laser%20Cutting." target="_blank" style="color: #16a34a; font-weight: bold;">WhatsApp Client</a><br/>
+          <strong>Phone:</strong> <a href="tel:${quote.phone}">${quote.phone}</a> | <a href="https://wa.me/${waPhone}?text=Hello%20${encodeURIComponent(quote.name)},%20thank%20you%20for%20your%20custom%20quote%20request%20with%20ASDE%20Laser%20Cutting%20(Ref:%20%23${shortId})." target="_blank" style="color: #16a34a; font-weight: bold;">WhatsApp Client</a><br/>
           <strong>Email:</strong> <a href="mailto:${quote.email}">${quote.email}</a><br/>
-          <strong>Location:</strong> ${quote.location}
+          <strong>Location:</strong> ${quote.location}<br/>
+          <strong>Tracking ID:</strong> <code>${fullQuoteId}</code>
         </p>
 
         <h3 style="color: #0f172a; font-size: 15px; margin: 20px 0 8px 0;">Project Specifications</h3>
@@ -280,12 +405,20 @@ export const sendQuoteAlertEmail = async (quote: any) => {
     </div>
   `;
 
-  await sendEmail(
-    adminEmail,
-    `📋 New Quote Request from ${quote.name} (${quote.projectType || 'Custom Project'})`,
-    `New custom quote request from ${quote.name}, Phone: ${quote.phone}, Material: ${quote.material}`,
-    html
-  );
+  await Promise.allSettled([
+    sendEmail(
+      quote.email,
+      `Quote Request Confirmation #${shortId} - ASDE Laser Cutting`,
+      `Thank you for your quote request #${shortId}. Tracking ID: ${fullQuoteId}. Track online at: ${trackingUrl}`,
+      customerHtml
+    ),
+    sendEmail(
+      adminEmail,
+      `📋 New Quote Request from ${quote.name} (Ref: #${shortId})`,
+      `New custom quote request from ${quote.name}, Phone: ${quote.phone}, Material: ${quote.material}`,
+      adminHtml
+    )
+  ]);
 };
 
 export const sendContactInquiryEmail = async (contact: any) => {
