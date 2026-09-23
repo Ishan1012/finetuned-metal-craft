@@ -25,6 +25,17 @@ export default function ManageQuotes() {
         }
     };
 
+    const handleStatusChange = async (quoteId: string, newStatus: string) => {
+        try {
+            await quoteAPI.updateQuote(quoteId, { status: newStatus } as any);
+            setQuotes(prev => prev.map(q => q._id === quoteId ? { ...q, status: newStatus } : q));
+            toast.success(`Quote status updated to ${newStatus}`);
+        } catch (error) {
+            console.error('Failed to update quote status:', error);
+            toast.error('Failed to update quote status');
+        }
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
@@ -41,6 +52,7 @@ export default function ManageQuotes() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="whitespace-nowrap">Action</TableHead>
+                                <TableHead className="whitespace-nowrap">Status</TableHead>
                                 <TableHead className="whitespace-nowrap">Quote ID</TableHead>
                                 <TableHead className="whitespace-nowrap">Name</TableHead>
                                 <TableHead className="whitespace-nowrap">Email</TableHead>
@@ -78,6 +90,19 @@ export default function ManageQuotes() {
                                             <MessageCircle className="h-3.5 w-3.5" />
                                             WhatsApp
                                         </a>
+                                    </TableCell>
+                                    <TableCell className="whitespace-nowrap">
+                                        <select
+                                            value={quote.status || 'Submitted'}
+                                            onChange={(e) => handleStatusChange(quote._id, e.target.value)}
+                                            className="text-xs font-semibold px-2.5 py-1 rounded-lg border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer"
+                                        >
+                                            <option value="Submitted">Submitted</option>
+                                            <option value="Under Review">Under Review</option>
+                                            <option value="Estimated">Estimated</option>
+                                            <option value="Approved">Approved</option>
+                                            <option value="Cancelled">Cancelled</option>
+                                        </select>
                                     </TableCell>
                                     <TableCell className="font-medium whitespace-nowrap">
                                         {quote._id ? quote._id.slice(-6).toUpperCase() : 'N/A'}

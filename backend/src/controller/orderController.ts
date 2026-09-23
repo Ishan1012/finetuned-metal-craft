@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as orderService from '../services/orderService';
 import * as emailService from '../services/emailService';
+import quoteService from '../services/quoteService';
 
 export const getOrders = async (req: Request, res: Response) => {
   try {
@@ -82,25 +83,54 @@ export const createCodOrBankOrder = async (req: Request, res: Response) => {
 
 export const trackOrder = async (req: Request, res: Response) => {
   try {
-    const orderId = req.params.orderId as string;
+    const orderId = (req.params.orderId as string || '').trim();
     const email = (req.query.email as string || '').toLowerCase().trim();
 
     if (!orderId) {
-      return res.status(400).json({ success: false, message: 'Order ID is required' });
+      return res.status(400).json({ success: false, message: 'Order or Quote ID is required' });
     }
 
-    const order = await orderService.findOrderById(orderId);
-    if (!order) {
-      return res.status(404).json({ success: false, message: 'Order not found with provided ID' });
+    // 1. Try finding in Orders
+    let order: any = null;
+    try {
+      order = await orderService.findOrderById(orderId);
+    } catch (e) {
+      // not a valid ObjectId or error
     }
 
-    if (email && order.email && order.email.toLowerCase().trim() !== email) {
-      return res.status(400).json({ success: false, message: 'Email address does not match this order' });
+    if (order) {
+      if (email && order.email && order.email.toLowerCase().trim() !== email) {
+        return res.status(400).json({ success: false, message: 'Email address does not match this order' });
+      }
+      return res.status(200).json({ success: true, type: 'order', data: order });
     }
 
-    res.status(200).json({ success: true, data: order });
+    // 2. Try finding in Quotes
+    let quote: any = null;
+    try {
+      quote = await quoteService.getQuoteById(orderId);
+    } catch (e) {
+      // not a valid ObjectId or error
+    }
+
+    if (quote) {
+      if (email && quote.email && quote.email.toLowerCase().trim() !== email) {
+        return res.status(400).json({ success: false, message: 'Email address does not match this quote' });
+      }
+      const quoteObj = quote.toObject ? quote.toObject() : quote;
+      return res.status(200).json({
+        success: true,
+        type: 'quote',
+        data: {
+          ...quoteObj,
+          status: quoteObj.status || 'Submitted'
+        }
+      });
+    }
+
+    res.status(404).json({ success: false, message: 'No Order or Quote found with provided ID' });
   } catch (error) {
     console.error('Track order error:', error);
-    res.status(500).json({ success: false, message: 'Failed to track order' });
+    res.status(500).json({ success: false, message: 'Failed to track order or quote' });
   }
 };

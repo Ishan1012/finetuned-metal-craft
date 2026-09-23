@@ -14,7 +14,12 @@ const quoteSchema = new mongoose.Schema({
     timeline: { type: String, required: true },
     budget: { type: String, default: "" },
     details: { type: String, required: false },
-    image: { type: String, default: "/images/placeholder.png" }
+    image: { type: String, default: "/images/placeholder.png" },
+    status: {
+        type: String,
+        enum: ['Submitted', 'Under Review', 'Estimated', 'Approved', 'Cancelled'],
+        default: 'Submitted'
+    }
 }, { timestamps: true });
 
 export const Quote = mongoose.model('Quotes', quoteSchema);

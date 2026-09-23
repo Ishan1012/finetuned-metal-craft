@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import quoteService from '../services/quoteService';
-import { sendQuoteAlertEmail } from '../services/emailService';
+import { sendQuoteAlertEmail, sendQuoteStatusUpdateEmail } from '../services/emailService';
 
 export const getQuotes = async (req: Request, res: Response) => {
     try {
@@ -34,10 +34,16 @@ export const addQuote = async (req: Request, res: Response) => {
         try {
             await sendQuoteAlertEmail(newQuote || req.body);
         } catch (emailErr) {
-            console.warn('Failed to send quote alert email:', emailErr);
+            console.error('Failed to send quote alert email:', emailErr);
         }
-        res.status(201).json({ success: true, name: newQuote.name, quoteId: newQuote._id });
+        res.status(201).json({
+            success: true,
+            name: newQuote.name,
+            quoteId: newQuote._id,
+            quote: newQuote
+        });
     } catch (error) {
+        console.error('Failed to create quote:', error);
         res.status(500).json({ success: false, message: 'Failed to create quote' });
     }
 };
@@ -45,6 +51,13 @@ export const addQuote = async (req: Request, res: Response) => {
 export const editQuote = async (req: Request, res: Response) => {
     try {
         const updatedQuote = await quoteService.updateQuote(req.params.id as string, req.body);
+        if (req.body.status && updatedQuote) {
+            try {
+                await sendQuoteStatusUpdateEmail(updatedQuote, req.body.status);
+            } catch (emailErr) {
+                console.error('Failed to send quote status update email:', emailErr);
+            }
+        }
         res.status(200).json({ success: true, data: updatedQuote });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Failed to update quote' + error });
