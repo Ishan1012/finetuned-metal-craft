@@ -28,7 +28,7 @@ ENV PORT=5000
 
 # Install production dependencies only (keep image slim for t3.micro)
 COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Copy built artifacts from builder stage
 COPY --from=builder /app/dist ./dist
