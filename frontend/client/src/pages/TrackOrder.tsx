@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ScrollReveal } from "@/components/common/ScrollReveal";
 import {
   Search,
   Package,
@@ -94,11 +93,15 @@ export default function TrackOrder() {
   };
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     const initialId = searchParams.get("id");
+    const initialEmail = searchParams.get("email");
     if (initialId) {
-      fetchTrackItem(initialId, searchParams.get("email") || undefined);
+      setOrderId(initialId);
+      if (initialEmail) setEmail(initialEmail);
+      fetchTrackItem(initialId, initialEmail || undefined);
     }
-  }, []);
+  }, [searchParams]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -157,71 +160,67 @@ export default function TrackOrder() {
           aria-hidden="true"
         />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
-          <ScrollReveal animation="fade-up">
-            <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-3">
-              Live Production & Quote Tracker
-            </p>
-            <h1 className="text-4xl sm:text-5xl font-bold text-primary-foreground mb-4">
-              Track Your Order or Quote
-            </h1>
-            <p className="text-lg text-primary-foreground/80">
-              Enter your Order ID or Quote Tracking ID to monitor fabrication progress, design reviews, and shipping status.
-            </p>
-          </ScrollReveal>
+          <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-3">
+            Live Production & Quote Tracker
+          </p>
+          <h1 className="text-4xl sm:text-5xl font-bold text-primary-foreground mb-4">
+            Track Your Order or Quote
+          </h1>
+          <p className="text-lg text-primary-foreground/80">
+            Enter your Order ID or Quote Tracking ID to monitor fabrication progress, design reviews, and shipping status.
+          </p>
         </div>
       </section>
 
       {/* Lookup Card Section */}
       <section className="section-padding bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <ScrollReveal animation="fade-up">
-            <Card className="shadow-lg border-border -mt-20 relative z-20 bg-card">
-              <CardContent className="p-6 sm:p-8">
-                <form onSubmit={handleSearch} className="grid sm:grid-cols-12 gap-4 items-end">
-                  <div className="sm:col-span-6 space-y-1.5">
-                    <label className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                      Order or Quote Tracking ID *
-                    </label>
-                    <Input
-                      placeholder="e.g. 64f8a... or Tracking ID"
-                      value={orderId}
-                      onChange={(e) => setOrderId(e.target.value)}
-                      required
-                      className="font-mono text-sm"
-                    />
-                  </div>
-                  <div className="sm:col-span-4 space-y-1.5">
-                    <label className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                      Email Address (Optional)
-                    </label>
-                    <Input
-                      type="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <Button
-                      variant="gold"
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-full h-10"
-                    >
-                      {isLoading ? (
-                        "Searching..."
-                      ) : (
-                        <>
-                          <Search className="h-4 w-4 mr-1.5" />
-                          Track
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </ScrollReveal>
+          <Card className="shadow-lg border-border -mt-20 relative z-20 bg-card">
+            <CardContent className="p-6 sm:p-8">
+              <form onSubmit={handleSearch} className="grid sm:grid-cols-12 gap-4 items-end">
+                <div className="sm:col-span-6 space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                    Order or Quote Tracking ID *
+                  </label>
+                  <Input
+                    placeholder="e.g. 64f8a... or Tracking ID"
+                    value={orderId}
+                    onChange={(e) => setOrderId(e.target.value)}
+                    required
+                    className="font-mono text-sm"
+                  />
+                </div>
+                <div className="sm:col-span-4 space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                    Email Address (Optional)
+                  </label>
+                  <Input
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <Button
+                    variant="gold"
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full h-10"
+                  >
+                    {isLoading ? (
+                      "Searching..."
+                    ) : (
+                      <>
+                        <Search className="h-4 w-4 mr-1.5" />
+                        Track
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
 
           {/* New Quote Submission Celebration Banner */}
           {item && item.isQuote && isNewQuote && (
@@ -267,12 +266,20 @@ export default function TrackOrder() {
             </div>
           )}
 
+          {/* Loading Indicator */}
+          {isLoading && (
+            <div className="mt-8 p-10 text-center rounded-2xl bg-card border border-border">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gold border-t-transparent mb-3" />
+              <p className="text-sm font-semibold text-foreground">Fetching Tracking Details...</p>
+              <p className="text-xs text-muted-foreground mt-1">Checking live fabrication status and project specs</p>
+            </div>
+          )}
+
           {/* Tracking Result View */}
           {item && (
             <div className="mt-10 space-y-8">
               {/* Status Header Card */}
-              <ScrollReveal animation="fade-up">
-                <Card className="border-border bg-card">
+              <Card className="border-border bg-card">
                   <CardContent className="p-6 sm:p-8">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border">
                       <div>
@@ -373,7 +380,6 @@ export default function TrackOrder() {
                     )}
                   </CardContent>
                 </Card>
-              </ScrollReveal>
 
               {/* Conditional View: Quote Specifications VS Ecommerce Order Details */}
               {item.isQuote ? (

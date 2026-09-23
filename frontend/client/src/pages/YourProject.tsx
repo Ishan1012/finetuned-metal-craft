@@ -197,10 +197,11 @@ export default function YourProject() {
       if (data.success) {
         const quoteId = data.quoteId || (data.quote && data.quote._id);
         toast({
-          title: `Quote Request Sent for ${data.name}!`,
-          description: "Redirecting to your live quote tracking page...",
+          title: "Quote Request Submitted!",
+          description: "Tracking ID generated. Viewing your live status tracker.",
         });
         if (quoteId) {
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" });
           navigate(`/track-order?id=${quoteId}&email=${encodeURIComponent(formData.email)}&type=quote&new=true`);
           return;
         }
