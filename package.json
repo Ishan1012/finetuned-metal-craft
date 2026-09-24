@@ -1,6 +1,9 @@
 {
   "name": "asde-lasercuttings-workspace",
   "private": true,
+  "workspaces": [
+    "frontend/client"
+  ],
   "scripts": {
     "dev": "bun run --cwd frontend/client dev",
     "build": "bun run --cwd frontend/client build",
