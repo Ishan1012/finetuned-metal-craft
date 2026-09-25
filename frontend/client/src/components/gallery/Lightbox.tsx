@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,26 @@ export function Lightbox({
   onNext,
   onPrev,
 }: LightboxProps) {
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") onNext();
+      if (e.key === "ArrowLeft") onPrev();
+    };
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose, onNext, onPrev]);
+
+  if (!isOpen || !images || images.length === 0 || !images[currentIndex]) return null;
 
   const currentImage = images[currentIndex];
 

@@ -1,10 +1,11 @@
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { useEffect } from "react";
+import { ArrowRight, CheckCircle2, ZoomIn } from "lucide-react";
+import { Lightbox } from "@/components/gallery/Lightbox";
 
 const products = [
   {
@@ -79,6 +80,30 @@ export default function Products() {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     }
   }, [hash]);
+
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const openLightbox = (index: number) => {
+    setCurrentImageIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === products.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? products.length - 1 : prev - 1
+    );
+  };
   
   return (
     <Layout>
@@ -122,12 +147,30 @@ export default function Products() {
                 <div className={`grid lg:grid-cols-2 gap-12 lg:gap-16 items-center ${index % 2 === 1 ? "lg:flex-row-reverse" : ""}`}>
                   {/* Image */}
                   <div className={`${index % 2 === 1 ? "lg:order-2" : ""}`}>
-                    <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-muted">
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open preview of ${product.title}`}
+                      onClick={() => openLightbox(index)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          openLightbox(index);
+                        }
+                      }}
+                      className="aspect-[4/3] rounded-2xl overflow-hidden bg-muted border border-border/50 shadow-sm relative group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    >
                       <img
                         src={product.image}
                         alt={product.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                       />
+                      {/* Zoom indicator overlay on hover */}
+                      <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                        <div className="h-11 w-11 rounded-full bg-background/90 text-foreground shadow-md backdrop-blur-sm flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300">
+                          <ZoomIn className="h-5 w-5 text-gold" />
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -217,6 +260,21 @@ export default function Products() {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* Lightbox Modal */}
+      <Lightbox
+        images={products.map((p) => ({
+          src: p.image,
+          alt: p.title,
+          title: p.title,
+          category: "Precision Metal Solutions",
+        }))}
+        currentIndex={currentImageIndex}
+        isOpen={lightboxOpen}
+        onClose={closeLightbox}
+        onNext={nextImage}
+        onPrev={prevImage}
+      />
     </Layout>
   );
 }
