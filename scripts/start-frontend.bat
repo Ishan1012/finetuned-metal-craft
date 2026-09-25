@@ -1,3 +1,3 @@
 @echo off
-cd ../frontend
+cd ../frontend/client
 npm run dev

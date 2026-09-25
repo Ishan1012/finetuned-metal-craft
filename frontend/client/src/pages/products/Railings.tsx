@@ -119,8 +119,8 @@ export default function Railings() {
       {/* Introduction */}
       <section className="section-padding bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-lg text-muted-foreground leading-relaxed">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-lg text-muted-foreground leading-relaxed text-justify">
               Transform your spaces with our precision-cut metal railings. Whether
               you're securing a staircase, beautifying a balcony, or adding elegance
               to a terrace, our railings combine safety with stunning design. Available
@@ -154,7 +154,7 @@ export default function Railings() {
                   <h3 className="text-xl font-bold text-foreground mb-3">
                     {type.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed text-justify">
                     {type.description}
                   </p>
                 </CardContent>
@@ -244,7 +244,7 @@ export default function Railings() {
                 Why Our Railings Are Different
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
-                <p>
+                <p className="text-justify">
                   <strong className="text-foreground">The Finishing Difference:</strong> Most
                   manufacturers deliver rough-cut railings with sharp edges that need
                   on-site finishing. Not us.
