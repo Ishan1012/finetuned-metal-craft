@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, ZoomIn } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { Product } from "@/types/Types";
+import { Lightbox } from "@/components/gallery/Lightbox";
 
 interface ProductCardProps {
   product: Product;
@@ -12,6 +14,23 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [currentImgIndex, setCurrentImgIndex] = useState(0);
+
+  const imagesList: string[] =
+    product.images && product.images.length > 0
+      ? product.images
+      : product.image
+      ? [product.image]
+      : [];
+
+  const nextImage = () => {
+    setCurrentImgIndex((prev) => (prev === imagesList.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevImage = () => {
+    setCurrentImgIndex((prev) => (prev === 0 ? imagesList.length - 1 : prev - 1));
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-IN", {
@@ -22,24 +41,57 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Card className="group overflow-hidden border-border hover:border-gold/50 transition-all duration-300 hover:shadow-lg">
-      <div className="relative aspect-square overflow-hidden bg-muted">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-        {product.status === "Out of Stock" && (
-          <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
-            <Badge variant="secondary" className="text-sm">
-              Out of Stock
-            </Badge>
+    <>
+      <Card className="group overflow-hidden border-border hover:border-gold/50 transition-all duration-300 hover:shadow-lg">
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label={`Zoom image of ${product.name}`}
+          onClick={() => {
+            setCurrentImgIndex(0);
+            setIsLightboxOpen(true);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setCurrentImgIndex(0);
+              setIsLightboxOpen(true);
+            }
+          }}
+          className="relative aspect-square overflow-hidden bg-muted cursor-zoom-in"
+        >
+          <img
+            src={imagesList[0] || product.image}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+
+          {/* Hover zoom indicator overlay */}
+          <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-full bg-background/90 text-foreground shadow-md backdrop-blur-sm flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300">
+              <ZoomIn className="h-5 w-5 text-gold" />
+            </div>
           </div>
-        )}
-        <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">
-          {product.material}
-        </Badge>
-      </div>
+
+          {imagesList.length > 1 && (
+            <span className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[11px] font-medium px-2 py-0.5 rounded-full z-10 pointer-events-none">
+              1/{imagesList.length}
+            </span>
+          )}
+
+          {product.status === "Out of Stock" && (
+            <div className="absolute inset-0 bg-background/80 flex items-center justify-center pointer-events-none z-10">
+              <Badge variant="secondary" className="text-sm">
+                Out of Stock
+              </Badge>
+            </div>
+          )}
+          {product.material && (
+            <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground pointer-events-none z-10">
+              {product.material}
+            </Badge>
+          )}
+        </div>
       <CardContent className="p-4">
         <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
           {product.category}
@@ -76,6 +128,21 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
       </CardContent>
-    </Card>
+      </Card>
+
+      <Lightbox
+        images={imagesList.map((src, i) => ({
+          src,
+          alt: `${product.name} - view ${i + 1}`,
+          title: product.name,
+          category: `${product.category}${product.material ? ` • ${product.material}` : ""}`,
+        }))}
+        currentIndex={currentImgIndex}
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        onNext={nextImage}
+        onPrev={prevImage}
+      />
+    </>
   );
 }
