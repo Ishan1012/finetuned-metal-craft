@@ -1,26 +1,28 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Package, Wrench, Truck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
-import { Card, CardContent } from "@/components/ui/card";
 
 const quickLinks = [
   {
-    icon: Package,
+    image: "/images/home.jpeg",
+    alt: "A collection of precision laser-cut architectural metalwork",
     title: "What We Make",
     description: "Precision-laser cut metal solutions for every space",
     href: "/products#hero",
     cta: "Explore Products",
   },
   {
-    icon: Wrench,
+    image: "/images/your_project.jpeg",
+    alt: "Decorative laser-cut patterns available for custom projects",
     title: "Custom Orders",
     description: "Each piece is made to your exact specifications",
     href: "/your-project",
     cta: "Start Your Project",
   },
   {
-    icon: Truck,
+    image: "/images/contact.jpeg",
+    alt: "Customer arranging a project delivery by phone",
     title: "Fast Delivery",
     description: "7-10 day delivery across India without compromising quality",
     href: "/contact",
@@ -30,39 +32,49 @@ const quickLinks = [
 
 export function Introduction() {
   return (
-    <section className="section-padding bg-background">
+    <section className="section-padding overflow-hidden bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Intro Text */}
-        <div className="max-w-4xl mx-auto text-center mb-16">
+        <div className="mx-auto mb-12 max-w-3xl text-center lg:mb-16">
           <ScrollReveal animation="fade-up">
-            <p className="text-sm font-semibold text-gold uppercase tracking-wider mb-4">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-gold">
               What We Make
             </p>
           </ScrollReveal>
           <ScrollReveal animation="fade-up" delay={0.1}>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              ASDE LaserCuttings creates precision-laser cut metal railings, panels, and 
-              architectural elements for residential, hospitality, and corporate environments. 
-              Based in Satna, Madhya Pradesh, we deliver exceptional craftsmanship with faster 
-              turnaround times than our competitors—all while maintaining the{" "}
-              <strong className="text-foreground">superior finishing quality</strong> that sets us apart.
+            <h2 className="font-display text-3xl font-semibold leading-tight text-foreground sm:text-4xl lg:text-5xl">
+              Metalwork shaped around your space
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={0.2}>
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+              From precision-cut architectural details to made-to-measure pieces, we combine
+              thoughtful design, superior finishing, and dependable delivery.
             </p>
           </ScrollReveal>
         </div>
 
-        {/* Quick Links */}
-        <StaggerContainer className="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <StaggerContainer className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
           {quickLinks.map((item) => (
             <StaggerItem key={item.title}>
-              <Card className="bg-card border-border hover:shadow-lg hover:border-gold/30 transition-all h-full group">
-                <CardContent className="p-8 flex flex-col h-full">
-                  <div className="h-14 w-14 rounded-xl bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold/20 transition-colors">
-                    <item.icon className="h-7 w-7 text-gold" />
+              <article className="group flex h-full flex-col overflow-hidden border border-border bg-card shadow-soft transition-all duration-500 hover:-translate-y-1 hover:border-gold/40 hover:shadow-elevated">
+                <Link to={item.href} className="relative block aspect-[4/3] overflow-hidden bg-muted">
+                  <img
+                    src={item.image}
+                    alt={item.alt}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 h-1 bg-gold transition-all duration-500 group-hover:h-2" />
+                  <div className="absolute right-4 top-4 flex h-9 min-w-9 items-center justify-center border border-primary-foreground/20 bg-primary/80 px-2 text-xs font-semibold text-primary-foreground backdrop-blur-sm">
+                    0{quickLinks.indexOf(item) + 1}
                   </div>
-                  <h3 className="text-xl font-bold text-foreground mb-3">
+                </Link>
+
+                <div className="flex flex-1 flex-col p-6 sm:p-7 lg:p-8">
+                  <h3 className="mb-3 text-xl font-bold text-foreground sm:text-2xl">
                     {item.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed mb-6 flex-1">
+                  <p className="mb-6 flex-1 leading-relaxed text-muted-foreground">
                     {item.description}
                   </p>
                   <Button variant="link" className="p-0 h-auto text-gold justify-start" asChild>
@@ -71,8 +83,8 @@ export function Introduction() {
                       <ArrowRight className="h-4 w-4 ml-1" />
                     </Link>
                   </Button>
-                </CardContent>
-              </Card>
+                </div>
+              </article>
             </StaggerItem>
           ))}
         </StaggerContainer>
