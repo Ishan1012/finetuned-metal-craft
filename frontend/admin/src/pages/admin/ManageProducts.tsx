@@ -3,6 +3,7 @@ import { Button } from "../../components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { productAPI, Product } from "../../lib/api-services";
 import { toast } from "sonner";
+import { Upload, X, Star, Plus, Image as ImageIcon } from "lucide-react";
 
 declare global {
   interface Window {
@@ -15,6 +16,7 @@ const EMPTY_PRODUCT: Omit<Product, "_id"> = {
   description: "",
   price: 0,
   image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80",
+  images: ["https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80"],
   category: "Name Plates",
   material: "Stainless Steel",
   status: "In Stock",
@@ -28,6 +30,7 @@ export default function ManageProducts() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formProduct, setFormProduct] = useState<Product | Omit<Product, "_id"> | null>(null);
+  const [urlInput, setUrlInput] = useState("");
 
   useEffect(() => {
     fetchProducts();
@@ -92,26 +95,97 @@ export default function ManageProducts() {
   };
 
   const openCloudinaryWidget = () => {
+    if (!window.cloudinary) {
+      toast.error("Cloudinary widget not loaded");
+      return;
+    }
+
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
         uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-        sources: ['local', 'url', 'camera'], // What options the user sees
-        multiple: false, // Only one image per product for now
-        maxFiles: 1,
+        sources: ['local', 'url', 'camera'],
+        multiple: true,
+        maxFiles: 10,
       },
       (error: any, result: any) => {
         if (!error && result && result.event === "success") {
-          console.log("Upload successful! URL: ", result.info.secure_url);
-          // Update the form state with the secure Cloudinary URL
-          if (formProduct) {
-            setFormProduct({ ...formProduct, image: result.info.secure_url });
-          }
+          const newUrl = result.info.secure_url;
+          console.log("Upload successful! URL: ", newUrl);
+          setFormProduct((prev: any) => {
+            if (!prev) return prev;
+            const existingImages: string[] = prev.images && prev.images.length > 0
+              ? [...prev.images]
+              : prev.image ? [prev.image] : [];
+            if (!existingImages.includes(newUrl)) {
+              existingImages.push(newUrl);
+            }
+            return {
+              ...prev,
+              images: existingImages,
+              image: existingImages[0] || newUrl,
+            };
+          });
+          toast.success("Image added to product!");
         }
       }
     );
 
     widget.open();
+  };
+
+  const handleAddImageUrl = () => {
+    if (!urlInput.trim()) return;
+    const url = urlInput.trim();
+    setFormProduct((prev: any) => {
+      if (!prev) return prev;
+      const existingImages: string[] = prev.images && prev.images.length > 0
+        ? [...prev.images]
+        : prev.image ? [prev.image] : [];
+      if (!existingImages.includes(url)) {
+        existingImages.push(url);
+      }
+      return {
+        ...prev,
+        images: existingImages,
+        image: existingImages[0] || url,
+      };
+    });
+    setUrlInput("");
+    toast.success("Image URL added!");
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    setFormProduct((prev: any) => {
+      if (!prev) return prev;
+      const existingImages: string[] = prev.images && prev.images.length > 0
+        ? [...prev.images]
+        : prev.image ? [prev.image] : [];
+      const updatedImages = existingImages.filter((_, idx) => idx !== indexToRemove);
+      return {
+        ...prev,
+        images: updatedImages,
+        image: updatedImages[0] || "",
+      };
+    });
+  };
+
+  const handleSetPrimaryImage = (indexToPrimary: number) => {
+    setFormProduct((prev: any) => {
+      if (!prev) return prev;
+      const existingImages: string[] = prev.images && prev.images.length > 0
+        ? [...prev.images]
+        : prev.image ? [prev.image] : [];
+      const selected = existingImages[indexToPrimary];
+      if (!selected) return prev;
+      const remaining = existingImages.filter((_, idx) => idx !== indexToPrimary);
+      const updatedImages = [selected, ...remaining];
+      return {
+        ...prev,
+        images: updatedImages,
+        image: selected,
+      };
+    });
   };
 
   const handleDelete = async (id: string) => {
@@ -120,6 +194,7 @@ export default function ManageProducts() {
     try {
       await productAPI.deleteProduct(id);
       setProducts((prev) => prev.filter((p) => p._id !== id));
+      setDigitalProducts((prev) => prev.filter((p) => p._id !== id));
       toast.success('Product deleted successfully');
     } catch (error) {
       console.error('Failed to delete product:', error);
@@ -135,22 +210,45 @@ export default function ManageProducts() {
     try {
       setSaving(true);
 
+      const imagesToSave = (formProduct.images && formProduct.images.length > 0)
+        ? formProduct.images
+        : formProduct.image ? [formProduct.image] : [];
+
+      if (imagesToSave.length === 0) {
+        toast.error("Please add at least one image for the product");
+        setSaving(false);
+        return;
+      }
+
+      const payload = {
+        ...formProduct,
+        images: imagesToSave,
+        image: imagesToSave[0],
+      };
+
       if ("_id" in formProduct) {
         // Update existing product
         const updatedProduct = await productAPI.updateProduct(
           formProduct._id,
-          formProduct as Product
+          payload as Product
         );
         setProducts((prev) =>
+          prev.map((p) => (p._id === formProduct._id ? updatedProduct : p))
+        );
+        setDigitalProducts((prev) =>
           prev.map((p) => (p._id === formProduct._id ? updatedProduct : p))
         );
         toast.success('Product updated successfully');
       } else {
         // Create new product
         const newProduct = await productAPI.createProduct(
-          formProduct as Omit<Product, "_id">
+          payload as Omit<Product, "_id">
         );
-        setProducts((prev) => [newProduct, ...prev]);
+        if (newProduct.isDigital) {
+          setDigitalProducts((prev) => [newProduct, ...prev]);
+        } else {
+          setProducts((prev) => [newProduct, ...prev]);
+        }
         toast.success('Product created successfully');
       }
 
@@ -167,7 +265,10 @@ export default function ManageProducts() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Manage Products</h1>
-        <Button className="bg-[#E4A143] hover:bg-[#D29D5B] text-white rounded-xl" onClick={() => setFormProduct(EMPTY_PRODUCT)}>
+        <Button className="bg-[#E4A143] hover:bg-[#D29D5B] text-white rounded-xl" onClick={() => {
+          setUrlInput("");
+          setFormProduct({ ...EMPTY_PRODUCT });
+        }}>
           Add New Product
         </Button>
       </div>
@@ -188,7 +289,14 @@ export default function ManageProducts() {
             {products.map((product) => (
               <TableRow key={product._id}>
                 <TableCell>
-                  <img src={product.image} alt={product.name} className="w-10 h-10 rounded-md object-cover" />
+                  <div className="flex items-center gap-1.5">
+                    <img src={product.image || (product.images && product.images[0])} alt={product.name} className="w-10 h-10 rounded-md object-cover border border-gray-100" />
+                    {product.images && product.images.length > 1 && (
+                      <span className="text-[11px] bg-amber-100 text-amber-800 font-semibold px-1.5 py-0.5 rounded-full" title={`${product.images.length} images`}>
+                        +{product.images.length - 1}
+                      </span>
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.category}</TableCell>
@@ -200,7 +308,17 @@ export default function ManageProducts() {
                   </span>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button className="bg-[#ffffff] hover:bg-[#E4A143] hover:text-white rounded-xl mr-3" variant="outline" size="sm" onClick={() => setFormProduct({ ...product })}>
+                  <Button className="bg-[#ffffff] hover:bg-[#E4A143] hover:text-white rounded-xl mr-3" variant="outline" size="sm" onClick={() => {
+                    setUrlInput("");
+                    const images = (product.images && product.images.length > 0)
+                      ? [...product.images]
+                      : product.image ? [product.image] : [];
+                    setFormProduct({
+                      ...product,
+                      images,
+                      image: images[0] || product.image || "",
+                    });
+                  }}>
                     Edit
                   </Button>
                   <Button className="bg-[#E4A143] hover:bg-[#D29D5B] text-white rounded-xl" variant="destructive" size="sm" onClick={() => handleDelete(product._id)}>
@@ -233,7 +351,14 @@ export default function ManageProducts() {
             {digitalProducts.map((product) => (
               <TableRow key={product._id}>
                 <TableCell>
-                  <img src={product.image} alt={product.name} className="w-10 h-10 rounded-md object-cover" />
+                  <div className="flex items-center gap-1.5">
+                    <img src={product.image || (product.images && product.images[0])} alt={product.name} className="w-10 h-10 rounded-md object-cover border border-gray-100" />
+                    {product.images && product.images.length > 1 && (
+                      <span className="text-[11px] bg-amber-100 text-amber-800 font-semibold px-1.5 py-0.5 rounded-full" title={`${product.images.length} images`}>
+                        +{product.images.length - 1}
+                      </span>
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.category}</TableCell>
@@ -245,7 +370,17 @@ export default function ManageProducts() {
                   </span>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button className="bg-[#ffffff] hover:bg-[#E4A143] hover:text-white rounded-xl mr-3" variant="outline" size="sm" onClick={() => setFormProduct({ ...product })}>
+                  <Button className="bg-[#ffffff] hover:bg-[#E4A143] hover:text-white rounded-xl mr-3" variant="outline" size="sm" onClick={() => {
+                    setUrlInput("");
+                    const images = (product.images && product.images.length > 0)
+                      ? [...product.images]
+                      : product.image ? [product.image] : [];
+                    setFormProduct({
+                      ...product,
+                      images,
+                      image: images[0] || product.image || "",
+                    });
+                  }}>
                     Edit
                   </Button>
                   <Button className="bg-[#E4A143] hover:bg-[#D29D5B] text-white rounded-xl" variant="destructive" size="sm" onClick={() => handleDelete(product._id)}>
@@ -260,7 +395,7 @@ export default function ManageProducts() {
 
       {formProduct && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-xl p-6 max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold mb-4">
               {"_id" in formProduct ? "Edit Product" : "Add New Product"}
             </h2>
@@ -355,7 +490,7 @@ export default function ManageProducts() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Product File/URL (If Digital)</label>
                   <div className="flex gap-2">
                     {formProduct.url !== "" ? (
-                      <p>File uploaded</p>
+                      <p className="text-sm text-green-600 font-medium py-2">File uploaded</p>
                     ) : (
                       <Button
                         type="button"
@@ -370,26 +505,110 @@ export default function ManageProducts() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
-                <div className="flex items-center gap-4">
-                  {/* Shows a preview of the existing or newly uploaded image */}
-                  {formProduct.image && (
-                    <img src={formProduct.image} alt="Preview" className="w-16 h-16 object-cover rounded border border-gray-200 shadow-sm" />
-                  )}
-
-                  <Button
-                    type="button"
-                    className="bg-[#E4A143] hover:bg-[#D29D5B] text-white rounded-xl"
-                    variant="outline"
-                    onClick={openCloudinaryWidget}
-                  >
-                    Upload Image
-                  </Button>
+              {/* Multi-Image Gallery Manager */}
+              <div className="border-t border-gray-200 pt-4">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-semibold text-gray-800">
+                    Product Images ({((formProduct.images && formProduct.images.length > 0) ? formProduct.images : (formProduct.image ? [formProduct.image] : [])).length})
+                  </label>
+                  <span className="text-xs text-muted-foreground">
+                    First image will be the primary cover
+                  </span>
                 </div>
+
+                {/* Upload & Add URL controls */}
+                <div className="space-y-2 mb-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      className="bg-[#E4A143] hover:bg-[#D29D5B] text-white rounded-xl flex items-center gap-1.5"
+                      onClick={openCloudinaryWidget}
+                    >
+                      <Upload className="h-4 w-4" />
+                      Upload Images (Cloudinary)
+                    </Button>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      value={urlInput}
+                      onChange={(e) => setUrlInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddImageUrl();
+                        }
+                      }}
+                      placeholder="Or paste an image URL here..."
+                      className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="rounded-xl border border-gray-300 hover:bg-gray-100"
+                      onClick={handleAddImageUrl}
+                    >
+                      <Plus className="h-4 w-4 mr-1" />
+                      Add URL
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Thumbnails list */}
+                {(() => {
+                  const currentImages: string[] = (formProduct.images && formProduct.images.length > 0)
+                    ? formProduct.images
+                    : (formProduct.image ? [formProduct.image] : []);
+
+                  if (currentImages.length === 0) {
+                    return (
+                      <div className="border border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-400">
+                        <ImageIcon className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-xs">No images added yet. Upload files or paste URLs above.</p>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-56 overflow-y-auto p-2 border border-gray-200 rounded-xl bg-gray-50/50">
+                      {currentImages.map((imgUrl: string, idx: number) => (
+                        <div key={idx} className="relative group rounded-lg overflow-hidden border border-gray-200 bg-white aspect-square shadow-sm flex flex-col justify-between">
+                          <img
+                            src={imgUrl}
+                            alt={`Product image ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                          {idx === 0 ? (
+                            <span className="absolute top-1 left-1 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
+                              Cover
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => handleSetPrimaryImage(idx)}
+                              title="Set as cover image"
+                              className="absolute top-1 left-1 bg-black/60 hover:bg-amber-600 text-white text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5"
+                            >
+                              <Star className="h-3 w-3" /> Set Cover
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(idx)}
+                            title="Remove image"
+                            className="absolute top-1 right-1 bg-red-600/80 hover:bg-red-600 text-white p-1 rounded-full shadow transition-opacity"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
 
-              <div className="flex justify-end gap-2 pt-4">
+              <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
                 <Button type="button" variant="outline" className="border border-[#E4A143] hover:bg-[#D29D5B] hover:text-white rounded-xl" onClick={() => setFormProduct(null)}>
                   Cancel
                 </Button>

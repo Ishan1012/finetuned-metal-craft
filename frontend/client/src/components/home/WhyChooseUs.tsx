@@ -10,7 +10,7 @@ const reasons = [
   {
     icon: Truck,
     title: "Fast Delivery",
-    description: "Quality doesn't have to mean slow. We deliver across India in 7-10 days without compromising on our finishing standards.",
+    description: "Quality doesn't have to mean slow. We deliver across India in 2-7 days without compromising on our finishing standards.",
   },
   {
     icon: BadgeCheck,
@@ -26,12 +26,7 @@ const reasons = [
     icon: MapPin,
     title: "All-India Service",
     description: "Based in Satna, Madhya Pradesh, but serving customers across India. We deliver everywhere with careful packaging.",
-  },
-  {
-    icon: Shield,
-    title: "1-Year Warranty",
-    description: "We stand behind our work with a comprehensive 1-year warranty. Your satisfaction is our success.",
-  },
+  }
 ];
 
 export function WhyChooseUs() {

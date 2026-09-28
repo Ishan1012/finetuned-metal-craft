@@ -57,7 +57,7 @@ const features = [
   { icon: Sparkles, text: "Smooth Finishing – No sharp edges or burrs" },
   { icon: Shield, text: "Safety Compliant – Meets building safety standards" },
   { icon: Clock, text: "7-10 Day Delivery – Across India" },
-  { icon: Star, text: "1-Year Warranty – Comprehensive coverage" },
+  { icon: Star, text: "Quality Tested – 100% inspection before dispatch" },
 ];
 
 const designs = [
@@ -324,13 +324,12 @@ export default function Railings() {
 
             <div className="bg-card rounded-xl border border-border overflow-hidden">
               {[
-                { label: "Material Options", value: "SS 304, SS 316, MS, Aluminium" },
-                { label: "Finish Options", value: "Mirror, Satin, Powder Coated, Painted" },
-                { label: "Thickness Range", value: "1.5mm to 3mm (depending on design)" },
-                { label: "Height Customization", value: "Any height up to 4 feet" },
+                { label: "Material Options", value: "Mild Steel-MS (Metal Iron), Stainless Steel-SS (Grade 202/304+), Aluminium, Other metals)" },
+                { label: "Finish Options", value: "Mirror, Satin, Brushed, PVD Coated, Powder Coated, Painted" },
+                { label: "Thickness Range", value: "0.1mm to 50mm (As per material and Designs)" },
+                { label: "Height Customization", value: "Size Customisation - Single Sheet upto 8ft width and 21ft height (as per applicability)" },
                 { label: "Design Complexity", value: "From simple to highly intricate" },
-                { label: "Warranty", value: "1 year against manufacturing defects" },
-                { label: "Delivery Time", value: "7-10 days across India" },
+                { label: "Delivery Time", value: "T+2 Days Local / T+2-7 days across India" },
               ].map((spec, index) => (
                 <div
                   key={spec.label}
@@ -354,7 +353,7 @@ export default function Railings() {
               Ready to Enhance Your Space?
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Get a free quote and design consultation. Premium railings delivered in 7-10 days.
+              Get a free quote and design consultation. Premium railings delivered in 2-7 days.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button variant="gold" size="lg" asChild>

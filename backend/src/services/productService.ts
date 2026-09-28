@@ -37,6 +37,14 @@ const productService = {
   createProduct: async (productData: any) => {
     const dataToSave = { ...productData };
 
+    if (dataToSave.images && Array.isArray(dataToSave.images) && dataToSave.images.length > 0) {
+      if (!dataToSave.image) {
+        dataToSave.image = dataToSave.images[0];
+      }
+    } else if (dataToSave.image) {
+      dataToSave.images = [dataToSave.image];
+    }
+
     if (dataToSave.url && dataToSave.isDigital) {
       dataToSave.url = encryptUrl(dataToSave.url);
     }
@@ -46,6 +54,14 @@ const productService = {
 
   updateProduct: async (id: string, updateData: any) => {
     const dataToUpdate = { ...updateData };
+
+    if (dataToUpdate.images && Array.isArray(dataToUpdate.images) && dataToUpdate.images.length > 0) {
+      if (!dataToUpdate.image) {
+        dataToUpdate.image = dataToUpdate.images[0];
+      }
+    } else if (dataToUpdate.image && (!dataToUpdate.images || dataToUpdate.images.length === 0)) {
+      dataToUpdate.images = [dataToUpdate.image];
+    }
 
     if (dataToUpdate.url) {
       dataToUpdate.url = encryptUrl(dataToUpdate.url);

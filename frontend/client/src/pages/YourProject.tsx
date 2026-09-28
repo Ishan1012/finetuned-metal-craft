@@ -48,32 +48,26 @@ const processSteps = [
     step: "04",
     title: "End-to-end logistics",
     description: "We handle all logistics from the factory to the port.",
-  },
-  {
-    icon: PersonStanding,
-    step: "05",
-    title: "Easy on-site installation",
-    description: "Dedicated on-site installation support and guidance for a flawless fit.",
-  },
+  }
 ];
 
 const materials = [
   {
-    name: "Stainless Steel (SS 304, SS 316)",
+    name: "Mild Steel (MS)",
+    description: "Strong, durable, and economical option.",
+    advantages: ["Cost-effective", "Very strong", "Can be painted any color", "Powder coating available"],
+    bestFor: "Outdoor/Indoor application",
+    finishes: "Powder coated, Painted",
+    thickness: "2mm - 25mm",
+    note: "Must be coated or painted to prevent rust",
+  },
+  {
+    name: "Stainless Steel (SS 304, SS 316, SS 202)",
     description: "Our most popular choice for outdoor applications.",
     advantages: ["Rust-proof and corrosion-resistant", "Modern, sleek appearance", "Easy to maintain", "Perfect for coastal areas"],
     bestFor: "Outdoor railings, facades, name plates exposed to weather",
     finishes: "Mirror, Satin, Brushed",
-    thickness: "1.5mm - 6mm",
-  },
-  {
-    name: "Mild Steel (MS)",
-    description: "Strong, durable, and economical option.",
-    advantages: ["Cost-effective", "Very strong", "Can be painted any color", "Powder coating available"],
-    bestFor: "Indoor applications, painted finishes, budget projects",
-    finishes: "Powder coated, Painted",
-    thickness: "2mm - 10mm",
-    note: "Must be coated or painted to prevent rust",
+    thickness: "0.8mm - 20mm",
   },
   {
     name: "Aluminium",
@@ -569,12 +563,12 @@ export default function YourProject() {
                 From Concept to Delivery
               </h2>
               <p className="text-muted-foreground">
-                Total Timeline: 2-3 weeks from approval to delivery
+                Total Timeline: 2 to 7 Days from approval to delivery
               </p>
             </div>
           </ScrollReveal>
 
-          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {processSteps.map((item) => (
               <StaggerItem key={item.title}>
                 <div className="relative h-full">
