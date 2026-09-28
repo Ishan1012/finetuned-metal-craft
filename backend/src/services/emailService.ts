@@ -46,7 +46,7 @@ const brandHeader = `
 
 const brandFooter = `
   <div style="background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0; border-radius: 0 0 8px 8px; font-size: 12px; color: #64748b;">
-    <p style="margin: 0 0 4px 0;"><strong>ASDE Laser Cutting</strong> • Satna, Madhya Pradesh 485001, India</p>
+    <p style="margin: 0 0 4px 0;"><strong>ASDE Laser Cutting</strong> • Agrawal Tower, Opposite to Maruti Nexa Showroom, Panna Road, Amoudha, Satna (M.P.)-485001</p>
     <p style="margin: 0 0 6px 0;">Phone: +91 93033 11384 | +91 98066 80879 | Email: contact@asdelasercuttings.com</p>
     <p style="margin: 0; font-size: 11px; color: #94a3b8;">This is an automated notification from ASDE Laser Cutting.</p>
   </div>

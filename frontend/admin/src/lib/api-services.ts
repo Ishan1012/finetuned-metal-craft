@@ -18,6 +18,7 @@ export interface Product {
   status: 'In Stock' | 'Out of Stock';
   material?: string;
   image: string;
+  images?: string[];
   url?: string;
   description?: string;
   [key: string]: any;

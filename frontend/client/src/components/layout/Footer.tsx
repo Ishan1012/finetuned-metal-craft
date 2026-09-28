@@ -127,9 +127,10 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-gold shrink-0 mt-0.5" />
-                <p className="text-sm text-primary-foreground/80">
-                  Satna, Madhya Pradesh<br />
-                  485001, India
+                <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                  Agrawal Tower, Opposite to Maruti Nexa Showroom,<br />
+                  Panna Road, Amoudha,<br />
+                  Satna (M.P.)-485001
                 </p>
               </li>
             </ul>

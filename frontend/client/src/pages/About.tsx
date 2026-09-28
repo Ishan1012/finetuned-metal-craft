@@ -3,6 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/common/ScrollReveal";
+import { LocationMapSection } from "@/components/common/LocationMapSection";
 import {
   CheckCircle2,
   ArrowRight,
@@ -47,23 +48,27 @@ const values = [
     title: "Continuous Improvement",
     description: "We're always learning, always improving, always raising our standards.",
   },
+  {
+    icon: Shield,
+    title: "Safety & Reliability",
+    description: "Every architectural structure and custom panel is precision-engineered for long-lasting safety and durability.",
+  },
 ];
 
 const whyChooseUs = [
   { icon: Sparkles, title: "Superior Finishing", description: "Our signature 3-step process ensures smooth, burr-free edges." },
-  { icon: Truck, title: "Fast Delivery", description: "7-10 days across India without sacrificing quality." },
+  { icon: Truck, title: "Fast Delivery", description: "2-7 days across India without sacrificing quality." },
   { icon: Users, title: "Expert Team", description: "15+ years of combined experience in metal fabrication." },
   { icon: BadgeCheck, title: "Quality Materials", description: "Only premium-grade metals from certified suppliers." },
   { icon: Wrench, title: "Custom Solutions", description: "From simple name plates to complex architectural installations." },
   { icon: MapPin, title: "All-India Service", description: "Based in Satna, delivering everywhere." },
   { icon: Clock, title: "Competitive Pricing", description: "Fair pricing for premium quality. No hidden costs." },
-  { icon: Shield, title: "1-Year Warranty", description: "We stand behind our work with comprehensive warranty." },
+  { icon: Shield, title: "After-Sales Support", description: "Dedicated customer service and expert assistance even after delivery." },
 ];
 
 const commitments = [
   "Honest Pricing – No hidden costs, transparent quotes",
-  "Quality Guarantee – 1-year warranty on all products",
-  "Timely Delivery – 7-10 days across India",
+  "Timely Delivery – 2-7 days across India",
   "Expert Guidance – Free design consultation",
   "Premium Materials – Only the best grades",
   "Superior Finishing – Our signature 3-step process",
@@ -211,18 +216,18 @@ export default function About() {
             </div>
           </ScrollReveal>
 
-          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {values.map((value) => (
-              <StaggerItem key={value.title}>
-                <Card className="bg-card border-border hover:shadow-lg transition-shadow h-full">
-                  <CardContent className="p-8">
-                    <div className="h-14 w-14 rounded-xl bg-gold/10 flex items-center justify-center mb-6">
+              <StaggerItem key={value.title} className="h-full">
+                <Card className="bg-card border-border hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
+                  <CardContent className="p-8 flex flex-col flex-1">
+                    <div className="h-14 w-14 rounded-xl bg-gold/10 flex items-center justify-center mb-6 shrink-0">
                       <value.icon className="h-7 w-7 text-gold" />
                     </div>
                     <h3 className="text-xl font-bold text-foreground mb-3">
                       {value.title}
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-muted-foreground leading-relaxed flex-1">
                       {value.description}
                     </p>
                   </CardContent>
@@ -249,13 +254,13 @@ export default function About() {
 
           <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {whyChooseUs.map((item) => (
-              <StaggerItem key={item.title}>
-                <div className="text-center p-6">
-                  <div className="h-12 w-12 mx-auto rounded-lg bg-gold/10 flex items-center justify-center mb-4">
+              <StaggerItem key={item.title} className="h-full">
+                <div className="bg-card/80 border border-border/80 rounded-2xl p-6 text-center hover:shadow-md hover:border-gold/40 hover:-translate-y-1 transition-all duration-300 h-full flex flex-col items-center justify-start group">
+                  <div className="h-12 w-12 mx-auto rounded-xl bg-gold/10 flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 shrink-0">
                     <item.icon className="h-6 w-6 text-gold" />
                   </div>
                   <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
                 </div>
               </StaggerItem>
             ))}
@@ -295,13 +300,23 @@ export default function About() {
                     human touch where it matters most: in finishing and quality inspection.
                   </p>
                 </div>
-                <div className="mt-8 p-4 bg-gold/10 rounded-lg">
-                  <p className="text-sm font-semibold text-foreground">
-                    🏭 Want to visit? We welcome customers to tour our facility!
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    See our process firsthand. Schedule a visit via the contact page.
-                  </p>
+                <div className="mt-8 p-5 bg-gold/10 rounded-xl border border-gold/20 space-y-3">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">
+                      🏭 Want to visit? We welcome customers to tour our facility!
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      See our process firsthand. Schedule a visit via the contact page.
+                    </p>
+                  </div>
+                  <div>
+                    <Button variant="gold" size="sm" className="font-semibold" asChild>
+                      <Link to="/contact">
+                        Schedule a Visit
+                        <ArrowRight className="h-4 w-4 ml-1" />
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
@@ -309,8 +324,16 @@ export default function About() {
         </div>
       </section>
 
+      {/* Workshop Location & Map */}
+      <LocationMapSection
+        subtitle="Visit Our Facility"
+        title="Our Factory & Showroom Location"
+        description="Agrawal Tower, Opposite to Maruti Nexa Showroom, Panna Road, Amoudha, Satna (M.P.)-485001"
+        bgColor="bg-cream"
+      />
+
       {/* Our Commitment */}
-      <section className="section-padding bg-cream">
+      <section className="section-padding bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <ScrollReveal animation="fade-up">
@@ -339,7 +362,7 @@ export default function About() {
       </section>
 
       {/* CTA */}
-      <section className="section-padding bg-background">
+      <section className="section-padding bg-cream">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal animation="scale">
             <div className="text-center max-w-2xl mx-auto">

@@ -26,7 +26,7 @@ const capabilities = [
 const specs = [
   { label: "Materials", value: "Any metal - SS, MS, Aluminium, Brass, Copper" },
   { label: "Thickness", value: "Up to 25mm" },
-  { label: "Maximum Size", value: "4 feet × 8 feet panels" },
+  { label: "Maximum Size", value: "8 ft x 21 ft panels" },
   { label: "Accuracy", value: "0.1mm precision" },
 ];
 

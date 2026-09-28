@@ -154,8 +154,8 @@ export default function NamePlates() {
       {/* Introduction */}
       <section className="section-padding bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-lg text-muted-foreground leading-relaxed">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-lg text-muted-foreground leading-relaxed text-justify">
               Your name plate is often the first thing visitors notice. Make it count 
               with our precision laser-cut name plates. Available in various metals 
               and designs, each piece is a perfect blend of functionality and artistry. 

@@ -18,9 +18,11 @@ import {
   Facebook,
   Youtube,
   Linkedin,
+  FileText,
 } from "lucide-react";
 import { contactAPI } from "@/lib/api-services";
 import { ContactType } from "@/types/Types";
+import { LocationMapSection } from "@/components/common/LocationMapSection";
 
 const contactMethods = [
   {
@@ -51,9 +53,9 @@ const contactMethods = [
     icon: MapPin,
     title: "Visit Our Factory",
     primary: "ASDE LaserCuttings",
-    secondary: "Agrawal Tower, Market Nexus Showroom",
-    description: "Patra Road, Amodha, Satna, MP - 485001",
-    action: null,
+    secondary: "Agrawal Tower, Opposite to Maruti Nexa Showroom",
+    description: "Panna Road, Amoudha, Satna (M.P.)-485001",
+    action: "https://maps.app.goo.gl/WBTBwFTsUWKj3r8k7",
   },
 ];
 
@@ -104,8 +106,8 @@ const faqs = [
         answer: "We'll guide you based on application (indoor/outdoor), budget, and aesthetic preferences.",
       },
       {
-        question: "What's the warranty?",
-        answer: "1-year comprehensive warranty against manufacturing defects.",
+        question: "How do you guarantee quality?",
+        answer: "Our 3-step finishing process and rigorous multi-point inspection ensure every product is smooth and defect-free.",
       },
       {
         question: "Do you provide installation?",
@@ -227,7 +229,7 @@ export default function Contact() {
       </section>
 
       {/* Contact Form & Info */}
-      <section className="section-padding bg-cream">
+      <section id="quote-form" className="section-padding bg-cream">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Form */}
@@ -388,6 +390,14 @@ export default function Contact() {
         </div>
       </section>
 
+      {/* Map & Factory Location Section */}
+      <LocationMapSection
+        subtitle="Visit Our Workshop"
+        title="Find Us in Satna"
+        description="Agrawal Tower, Opposite to Maruti Nexa Showroom, Panna Road, Amoudha, Satna (M.P.)-485001"
+        bgColor="bg-background"
+      />
+
       {/* Service Areas */}
       <section className="section-padding bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -481,29 +491,47 @@ export default function Contact() {
       </section>
 
       {/* CTA */}
-      <section className="section-padding gradient-hero">
+      <section className="section-padding bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal animation="scale">
-            <div className="text-center max-w-2xl mx-auto">
-              <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground mb-6">
+            <div className="relative rounded-3xl bg-gradient-to-b from-[#2a2a2e] via-[#1c1c1f] to-[#141416] py-14 px-6 sm:px-12 md:py-16 md:px-16 text-center text-white shadow-2xl overflow-hidden border border-white/10 max-w-5xl mx-auto">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">
                 Ready to Start Your Project?
               </h2>
-              <p className="text-lg text-primary-foreground/80 mb-8">
-                Get a free consultation and quote within 24 hours.
+              <p className="text-base sm:text-lg text-white/80 max-w-2xl mx-auto mb-8 leading-relaxed">
+                Get a free consultation and quote within 24 hours. Let's discuss how we can bring your vision to life with precision and quality.
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Button variant="hero" size="xl" asChild>
-                  <a href="https://wa.me/919303311384" target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="h-5 w-5" />
-                    WhatsApp Us
-                  </a>
-                </Button>
-                <Button variant="heroOutline" size="xl" asChild>
-                  <a href="tel:+919303311384">
-                    <Phone className="h-5 w-5" />
-                    Call Now
-                  </a>
-                </Button>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <a
+                  href="https://wa.me/919303311384"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#d99824] hover:bg-[#c2841b] text-zinc-950 font-semibold text-sm sm:text-base transition-all shadow-md hover:shadow-lg active:scale-95"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  WhatsApp Us
+                </a>
+                <a
+                  href="tel:+919303311384"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] text-white border border-white/20 font-medium text-sm sm:text-base transition-all active:scale-95"
+                >
+                  <Phone className="h-4 w-4" />
+                  Call Now
+                </a>
+                <a
+                  href="#quote-form"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const el = document.getElementById("quote-form");
+                    if (el) {
+                      el.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] text-white border border-white/20 font-medium text-sm sm:text-base transition-all cursor-pointer active:scale-95"
+                >
+                  <FileText className="h-4 w-4" />
+                  Request Quote
+                </a>
               </div>
             </div>
           </ScrollReveal>
